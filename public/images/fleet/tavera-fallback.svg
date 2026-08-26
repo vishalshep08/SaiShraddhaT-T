@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBF9F5"/>
+      <stop offset="100%" stop-color="#F1ECE1"/>
+    </linearGradient>
+    <linearGradient id="carBodyTavera" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="glassTavera" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <rect width="600" height="340" rx="24" fill="url(#bgGrad2)"/>
+  
+  <circle cx="530" cy="70" r="45" fill="#800020" fill-opacity="0.04"/>
+  <circle cx="530" cy="70" r="30" fill="#800020" fill-opacity="0.06"/>
+  <text x="530" y="74" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#800020" text-anchor="middle" letter-spacing="1">OWNED</text>
+  
+  <ellipse cx="300" cy="275" rx="230" ry="18" fill="#000" fill-opacity="0.12"/>
+  
+  <g filter="url(#shadow2)">
+    <!-- Roof Carrier -->
+    <rect x="210" y="115" width="170" height="8" rx="2" fill="#94A3B8"/>
+    <line x1="240" y1="123" x2="240" y2="135" stroke="#94A3B8" stroke-width="3"/>
+    <line x1="350" y1="123" x2="350" y2="135" stroke="#94A3B8" stroke-width="3"/>
+    
+    <!-- Main Body Boxier Tavera Frame -->
+    <path d="M 85 215 C 85 190, 100 170, 125 160 L 195 135 L 395 135 L 485 165 C 510 175, 525 195, 525 215 L 525 240 C 525 250, 515 255, 500 255 L 440 255 C 435 228, 395 228, 390 255 L 205 255 C 200 228, 160 228, 155 255 L 95 255 C 85 255, 85 245, 85 235 Z" fill="url(#carBodyTavera)"/>
+    
+    <!-- Windows -->
+    <path d="M 195 140 L 390 140 L 460 168 C 465 170, 460 195, 450 198 L 155 198 C 150 195, 165 165, 195 140 Z" fill="url(#glassTavera)"/>
+    
+    <line x1="270" y1="140" x2="270" y2="198" stroke="#1E293B" stroke-width="4"/>
+    <line x1="350" y1="140" x2="350" y2="198" stroke="#1E293B" stroke-width="4"/>
+    
+    <path d="M 495 185 L 520 190 C 523 195, 523 205, 515 208 L 490 200 Z" fill="#FBBF24"/>
+    <path d="M 90 195 L 100 195 C 103 202, 103 215, 93 220 L 88 215 Z" fill="#EF4444"/>
+    
+    <!-- Wheels -->
+    <circle cx="180" cy="250" r="34" fill="#0F172A"/>
+    <circle cx="180" cy="250" r="20" fill="#CBD5E1"/>
+    <circle cx="180" cy="250" r="10" fill="#475569"/>
+    
+    <circle cx="415" cy="250" r="34" fill="#0F172A"/>
+    <circle cx="415" cy="250" r="20" fill="#CBD5E1"/>
+    <circle cx="415" cy="250" r="10" fill="#475569"/>
+  </g>
+  
+  <text x="40" y="55" font-family="system-ui, sans-serif" font-size="18" font-weight="900" fill="#1C1917" letter-spacing="-0.5">Chevrolet Tavera</text>
+  <text x="40" y="78" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#800020">7–8 Seater • Heavy AC • High Luggage Capacity</text>
+</svg>

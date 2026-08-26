@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBF9F5"/>
+      <stop offset="100%" stop-color="#F1ECE1"/>
+    </linearGradient>
+    <linearGradient id="carBodyTempo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+    <linearGradient id="glassTempo" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <filter id="shadow4" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <rect width="600" height="340" rx="24" fill="url(#bgGrad4)"/>
+  
+  <circle cx="530" cy="70" r="45" fill="#D97706" fill-opacity="0.06"/>
+  <text x="530" y="74" font-family="system-ui, sans-serif" font-size="10" font-weight="bold" fill="#D97706" text-anchor="middle" letter-spacing="0.5">ON REQUEST</text>
+  
+  <ellipse cx="300" cy="275" rx="230" ry="18" fill="#000" fill-opacity="0.12"/>
+  
+  <g filter="url(#shadow4)">
+    <!-- High Roof Van Body -->
+    <path d="M 80 230 C 80 160, 85 125, 105 120 L 415 120 L 485 145 C 515 155, 525 180, 525 210 L 525 240 C 525 250, 515 255, 500 255 L 440 255 C 435 228, 395 228, 390 255 L 205 255 C 200 228, 160 228, 155 255 L 90 255 C 80 255, 80 245, 80 235 Z" fill="url(#carBodyTempo)"/>
+    
+    <!-- Long Panoramic Windows -->
+    <rect x="110" y="130" width="60" height="60" rx="4" fill="url(#glassTempo)"/>
+    <rect x="180" y="130" width="60" height="60" rx="4" fill="url(#glassTempo)"/>
+    <rect x="250" y="130" width="60" height="60" rx="4" fill="url(#glassTempo)"/>
+    <rect x="320" y="130" width="60" height="60" rx="4" fill="url(#glassTempo)"/>
+    <path d="M 390 130 L 460 148 C 465 150, 460 190, 450 190 L 390 190 Z" fill="url(#glassTempo)"/>
+    
+    <path d="M 495 185 L 520 190 C 523 195, 523 205, 515 208 L 490 200 Z" fill="#FBBF24"/>
+    <path d="M 85 195 L 95 195 C 98 202, 98 215, 88 220 L 83 215 Z" fill="#EF4444"/>
+    
+    <!-- Wheels -->
+    <circle cx="180" cy="250" r="34" fill="#0F172A"/>
+    <circle cx="180" cy="250" r="20" fill="#CBD5E1"/>
+    <circle cx="180" cy="250" r="10" fill="#475569"/>
+    
+    <circle cx="415" cy="250" r="34" fill="#0F172A"/>
+    <circle cx="415" cy="250" r="20" fill="#CBD5E1"/>
+    <circle cx="415" cy="250" r="10" fill="#475569"/>
+  </g>
+  
+  <text x="40" y="55" font-family="system-ui, sans-serif" font-size="18" font-weight="900" fill="#1C1917" letter-spacing="-0.5">Tempo Traveller (13–26 Seater)</text>
+  <text x="40" y="78" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#B45309">13 to 26 Seats • Pushback Luxury Seats • Large Group Yatra</text>
+</svg>

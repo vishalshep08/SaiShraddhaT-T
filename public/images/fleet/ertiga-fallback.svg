@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FBF9F5"/>
+      <stop offset="100%" stop-color="#F1ECE1"/>
+    </linearGradient>
+    <linearGradient id="carBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#800020"/>
+      <stop offset="100%" stop-color="#550015"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Card -->
+  <rect width="600" height="340" rx="24" fill="url(#bgGrad)"/>
+  
+  <!-- Subtle Grid Pattern / Shirdi Badge -->
+  <circle cx="530" cy="70" r="45" fill="#800020" fill-opacity="0.04"/>
+  <circle cx="530" cy="70" r="30" fill="#800020" fill-opacity="0.06"/>
+  <text x="530" y="74" font-family="system-ui, sans-serif" font-size="11" font-weight="bold" fill="#800020" text-anchor="middle" letter-spacing="1">OWNED</text>
+  
+  <!-- Road / Shadow Base -->
+  <ellipse cx="300" cy="275" rx="230" ry="18" fill="#000" fill-opacity="0.12"/>
+  
+  <!-- Car Group -->
+  <g filter="url(#shadow)">
+    <!-- Main Body Lower -->
+    <path d="M 90 220 C 90 200, 110 185, 150 180 L 210 150 L 360 145 L 470 170 C 500 175, 520 190, 520 215 L 520 240 C 520 250, 510 255, 495 255 L 435 255 C 430 230, 395 230, 390 255 L 205 255 C 200 230, 165 230, 160 255 L 105 255 C 95 255, 90 245, 90 235 Z" fill="url(#carBody)"/>
+    
+    <!-- Cabin & Windows -->
+    <path d="M 215 153 L 355 148 L 440 170 C 445 172, 440 195, 435 200 L 175 200 C 170 195, 185 168, 215 153 Z" fill="url(#glass)"/>
+    
+    <!-- Window Dividers -->
+    <line x1="285" y1="150" x2="285" y2="200" stroke="#800020" stroke-width="4"/>
+    <line x1="365" y1="150" x2="365" y2="200" stroke="#800020" stroke-width="4"/>
+    
+    <!-- Headlight & Taillight -->
+    <path d="M 490 190 L 515 195 C 518 200, 518 208, 510 212 L 485 205 Z" fill="#FBBF24"/>
+    <path d="M 95 205 L 105 205 C 108 212, 108 220, 98 225 L 92 220 Z" fill="#EF4444"/>
+    
+    <!-- Chrome Trim Lines -->
+    <path d="M 150 210 L 480 210" stroke="#FFFFFF" stroke-opacity="0.3" stroke-width="2"/>
+    <path d="M 120 240 L 490 240" stroke="#FFFFFF" stroke-opacity="0.2" stroke-width="2"/>
+    
+    <!-- Wheels -->
+    <!-- Rear Wheel -->
+    <circle cx="182" cy="250" r="32" fill="#1E293B"/>
+    <circle cx="182" cy="250" r="20" fill="#94A3B8"/>
+    <circle cx="182" cy="250" r="10" fill="#475569"/>
+    
+    <!-- Front Wheel -->
+    <circle cx="412" cy="250" r="32" fill="#1E293B"/>
+    <circle cx="412" cy="250" r="20" fill="#94A3B8"/>
+    <circle cx="412" cy="250" r="10" fill="#475569"/>
+  </g>
+  
+  <!-- Text Label Overlay -->
+  <text x="40" y="55" font-family="system-ui, sans-serif" font-size="18" font-weight="900" fill="#1C1917" letter-spacing="-0.5">Maruti Suzuki Ertiga</text>
+  <text x="40" y="78" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#800020">6+1 Seater • AC • Family &amp; Pilgrimage Fleet</text>
+</svg>

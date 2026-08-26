@@ -4,8 +4,8 @@
 -- Description: Admin Security, Authorization, Storage Bucket & Global Branding Schema
 --
 -- CRITICAL COMPLIANCE NOTICE:
--- THIS SQL IS GENERATED FOR MANUAL EXECUTION ONLY IN SUPABASE SQL EDITOR.
--- DO NOT EXECUTE AUTOMATICALLY.
+-- THIS SQL IS FULLY IDEMPOTENT (SAFE TO RUN REPEATEDLY).
+-- DO NOT EXECUTE AUTOMATICALLY — COPY AND RUN IN SUPABASE SQL EDITOR.
 -- ==============================================================================
 
 -- ==============================================================================
@@ -44,7 +44,7 @@ SET setting_value = EXCLUDED.setting_value,
 -- Enable RLS on business_settings
 ALTER TABLE business_settings ENABLE ROW LEVEL SECURITY;
 
--- Drop obsolete broad policies if present
+-- Drop existing policies if present before recreating
 DROP POLICY IF EXISTS "Public read business_settings" ON business_settings;
 DROP POLICY IF EXISTS "Admins full access business_settings" ON business_settings;
 DROP POLICY IF EXISTS "Allow public read access for business_settings" ON business_settings;
@@ -81,6 +81,12 @@ ON CONFLICT (id) DO UPDATE
 SET public = true,
     file_size_limit = 3145728,
     allowed_mime_types = ARRAY['image/png', 'image/webp', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+
+-- Drop existing storage policies if present before recreating
+DROP POLICY IF EXISTS "Public read branding bucket" ON storage.objects;
+DROP POLICY IF EXISTS "Admins insert branding bucket" ON storage.objects;
+DROP POLICY IF EXISTS "Admins update branding bucket" ON storage.objects;
+DROP POLICY IF EXISTS "Admins delete branding bucket" ON storage.objects;
 
 -- Storage RLS: Public can view branding assets
 CREATE POLICY "Public read branding bucket"
@@ -126,6 +132,7 @@ ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 DROP POLICY IF EXISTS "Users can read own profile" ON profiles;
 DROP POLICY IF EXISTS "Admins can view all profiles" ON profiles;
+DROP POLICY IF EXISTS "Admins can manage profiles" ON profiles;
 
 -- Users can read their own profile
 CREATE POLICY "Users can read own profile"

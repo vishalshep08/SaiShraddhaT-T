@@ -116,20 +116,28 @@ export async function saveCMSServiceAction(service: Partial<CMSServiceItem>): Pr
     const supabase = createSupabaseServerClient();
     if (!supabase) return { success: false, error: "Database client unavailable." };
 
+    const titleVal = service.title.trim();
+    const shortDescVal = service.shortDescription.trim();
+    const fullDescVal = service.fullDescription?.trim() || shortDescVal;
+    const seoTitleVal = service.seoTitle?.trim() || titleVal;
+    const metaDescVal = service.metaDescription?.trim() || shortDescVal;
+
     const payload = {
-      title: service.title.trim(),
+      title: titleVal,
       slug: service.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       service_category: service.serviceCategory || "Outstation",
-      short_description: service.shortDescription.trim(),
-      full_description: service.fullDescription?.trim() || null,
+      short_description: shortDescVal,
+      full_description: fullDescVal,
       icon_name: service.iconName || "Car",
       featured_image_url: service.featuredImageUrl || null,
       image_alt_text: service.imageAltText || null,
       is_featured: Boolean(service.isFeatured),
       status: service.status || "published",
       display_order: Number(service.displayOrder) || 0,
-      seo_title: service.seoTitle?.trim() || null,
-      meta_description: service.metaDescription?.trim() || null,
+      seo_title: seoTitleVal,
+      meta_description: metaDescVal,
+      seo_description: metaDescVal,
+      is_published: service.status === "published",
       updated_at: new Date().toISOString(),
     };
 
@@ -272,14 +280,21 @@ export async function saveCMSDestinationAction(dest: Partial<CMSDestinationItem>
     const supabase = createSupabaseServerClient();
     if (!supabase) return { success: false, error: "Database client unavailable." };
 
+    const nameVal = dest.name.trim();
+    const shortDescVal = dest.shortDescription.trim();
+    const fullDescVal = dest.fullDescription?.trim() || shortDescVal;
+    const seoTitleVal = dest.seoTitle?.trim() || nameVal;
+    const metaDescVal = dest.metaDescription?.trim() || shortDescVal;
+
     const payload = {
-      name: dest.name.trim(),
+      name: nameVal,
       slug: dest.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       origin: dest.origin || "Shirdi",
       distance_km: dest.approxDistanceKm ? Number(dest.approxDistanceKm) : null,
       approx_travel_time: dest.approxTravelTime?.trim() || null,
-      short_description: dest.shortDescription.trim(),
-      long_description: dest.fullDescription?.trim() || null,
+      short_description: shortDescVal,
+      long_description: fullDescVal,
+      full_description: fullDescVal,
       highlights: dest.highlights || [],
       primary_image_url: dest.primaryImageUrl || null,
       image_alt_text: dest.imageAltText || null,
@@ -287,8 +302,10 @@ export async function saveCMSDestinationAction(dest: Partial<CMSDestinationItem>
       is_featured: Boolean(dest.isFeatured),
       status: dest.status || "published",
       display_order: Number(dest.displayOrder) || 0,
-      seo_title: dest.seoTitle?.trim() || null,
-      meta_description: dest.metaDescription?.trim() || null,
+      seo_title: seoTitleVal,
+      meta_description: metaDescVal,
+      seo_description: metaDescVal,
+      is_published: dest.status === "published",
       updated_at: new Date().toISOString(),
     };
 
@@ -350,14 +367,14 @@ export async function getCMSRoutesAction(): Promise<CMSRouteItem[]> {
 
     return data.map((row: any) => ({
       id: row.id,
-      title: row.title,
+      title: row.title || row.headline,
       slug: row.slug,
       origin: row.origin || "Shirdi",
-      destination: row.destination,
+      destination: row.destination || row.destination_name,
       shortDescription: row.short_description,
-      fullDescription: row.full_description,
+      fullDescription: row.full_description || row.route_overview,
       approxDistanceKm: row.approx_distance_km,
-      approxTravelTime: row.approx_travel_time,
+      approxTravelTime: row.approx_travel_time || row.approx_duration_text,
       startingFare: row.starting_fare,
       tripType: row.trip_type || "one_way",
       vehicleCategories: row.vehicle_categories || [],
@@ -368,7 +385,7 @@ export async function getCMSRoutesAction(): Promise<CMSRouteItem[]> {
       status: (row.status as ContentStatus) || "published",
       displayOrder: row.display_order || 0,
       seoTitle: row.seo_title,
-      metaDescription: row.meta_description,
+      metaDescription: row.meta_description || row.seo_description,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     }));
@@ -394,14 +411,14 @@ export async function getCMSRouteByIdAction(id: string): Promise<CMSRouteItem | 
 
     return {
       id: row.id,
-      title: row.title,
+      title: row.title || row.headline,
       slug: row.slug,
       origin: row.origin || "Shirdi",
-      destination: row.destination,
+      destination: row.destination || row.destination_name,
       shortDescription: row.short_description,
-      fullDescription: row.full_description,
+      fullDescription: row.full_description || row.route_overview,
       approxDistanceKm: row.approx_distance_km,
-      approxTravelTime: row.approx_travel_time,
+      approxTravelTime: row.approx_travel_time || row.approx_duration_text,
       startingFare: row.starting_fare,
       tripType: row.trip_type || "one_way",
       vehicleCategories: row.vehicle_categories || [],
@@ -412,7 +429,7 @@ export async function getCMSRouteByIdAction(id: string): Promise<CMSRouteItem | 
       status: (row.status as ContentStatus) || "published",
       displayOrder: row.display_order || 0,
       seoTitle: row.seo_title,
-      metaDescription: row.meta_description,
+      metaDescription: row.meta_description || row.seo_description,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
@@ -434,13 +451,22 @@ export async function saveCMSRouteAction(route: Partial<CMSRouteItem>): Promise<
     const supabase = createSupabaseServerClient();
     if (!supabase) return { success: false, error: "Database client unavailable." };
 
+    const destName = route.destination.trim();
+    const destSlug = destName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const titleVal = route.title.trim();
+    const shortDescVal = route.shortDescription.trim();
+    const fullDescVal = route.fullDescription?.trim() || shortDescVal;
+    const seoTitleVal = route.seoTitle?.trim() || titleVal;
+    const metaDescVal = route.metaDescription?.trim() || shortDescVal;
+
     const payload = {
-      title: route.title.trim(),
+      // Primary modern columns
+      title: titleVal,
       slug: route.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       origin: route.origin || "Shirdi",
-      destination: route.destination.trim(),
-      short_description: route.shortDescription.trim(),
-      full_description: route.fullDescription?.trim() || null,
+      destination: destName,
+      short_description: shortDescVal,
+      full_description: fullDescVal,
       approx_distance_km: route.approxDistanceKm ? Number(route.approxDistanceKm) : null,
       approx_travel_time: route.approxTravelTime?.trim() || null,
       starting_fare: route.startingFare ? Number(route.startingFare) : null,
@@ -452,8 +478,19 @@ export async function saveCMSRouteAction(route: Partial<CMSRouteItem>): Promise<
       is_featured: Boolean(route.isFeatured),
       status: route.status || "published",
       display_order: Number(route.displayOrder) || 0,
-      seo_title: route.seoTitle?.trim() || null,
-      meta_description: route.metaDescription?.trim() || null,
+      seo_title: seoTitleVal,
+      meta_description: metaDescVal,
+
+      // Mirror legacy schema columns to prevent NOT-NULL constraint errors on old schemas
+      destination_name: destName,
+      destination_slug: destSlug || "shirdi-outstation",
+      headline: titleVal,
+      route_overview: fullDescVal,
+      seo_description: metaDescVal,
+      approx_distance_text: route.approxDistanceKm ? `${route.approxDistanceKm} km` : null,
+      approx_duration_text: route.approxTravelTime?.trim() || null,
+      is_published: route.status === "published",
+
       updated_at: new Date().toISOString(),
     };
 
@@ -515,14 +552,14 @@ export async function getCMSToursAction(): Promise<CMSTourPackageItem[]> {
 
     return data.map((row: any) => ({
       id: row.id,
-      title: row.title,
+      title: row.title || row.headline,
       slug: row.slug,
       duration: row.duration,
       startingLocation: row.starting_location || "Shirdi",
       destinationsIncluded: row.destinations || [],
       startingFare: row.starting_fare,
       shortDescription: row.short_description,
-      fullDescription: row.full_description,
+      fullDescription: row.full_description || row.route_overview,
       itinerary: row.itinerary || [],
       inclusions: row.inclusions || [],
       exclusions: row.exclusions || [],
@@ -532,7 +569,7 @@ export async function getCMSToursAction(): Promise<CMSTourPackageItem[]> {
       status: (row.status as ContentStatus) || "published",
       displayOrder: row.display_order || 0,
       seoTitle: row.seo_title,
-      metaDescription: row.meta_description,
+      metaDescription: row.meta_description || row.seo_description,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     }));
@@ -558,14 +595,14 @@ export async function getCMSTourByIdAction(id: string): Promise<CMSTourPackageIt
 
     return {
       id: row.id,
-      title: row.title,
+      title: row.title || row.headline,
       slug: row.slug,
       duration: row.duration,
       startingLocation: row.starting_location || "Shirdi",
       destinationsIncluded: row.destinations || [],
       startingFare: row.starting_fare,
       shortDescription: row.short_description,
-      fullDescription: row.full_description,
+      fullDescription: row.full_description || row.route_overview,
       itinerary: row.itinerary || [],
       inclusions: row.inclusions || [],
       exclusions: row.exclusions || [],
@@ -575,7 +612,7 @@ export async function getCMSTourByIdAction(id: string): Promise<CMSTourPackageIt
       status: (row.status as ContentStatus) || "published",
       displayOrder: row.display_order || 0,
       seoTitle: row.seo_title,
-      metaDescription: row.meta_description,
+      metaDescription: row.meta_description || row.seo_description,
       createdAt: row.created_at,
       updatedAt: row.updated_at,
     };
@@ -597,15 +634,21 @@ export async function saveCMSTourAction(tour: Partial<CMSTourPackageItem>): Prom
     const supabase = createSupabaseServerClient();
     if (!supabase) return { success: false, error: "Database client unavailable." };
 
+    const titleVal = tour.title.trim();
+    const shortDescVal = tour.shortDescription.trim();
+    const fullDescVal = tour.fullDescription?.trim() || shortDescVal;
+    const seoTitleVal = tour.seoTitle?.trim() || titleVal;
+    const metaDescVal = tour.metaDescription?.trim() || shortDescVal;
+
     const payload = {
-      title: tour.title.trim(),
+      title: titleVal,
       slug: tour.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       duration: tour.duration.trim(),
       starting_location: tour.startingLocation || "Shirdi",
       destinations: tour.destinationsIncluded || [],
       starting_fare: tour.startingFare ? Number(tour.startingFare) : null,
-      short_description: tour.shortDescription.trim(),
-      full_description: tour.fullDescription?.trim() || null,
+      short_description: shortDescVal,
+      full_description: fullDescVal,
       itinerary: tour.itinerary || [],
       inclusions: tour.inclusions || [],
       exclusions: tour.exclusions || [],
@@ -614,8 +657,10 @@ export async function saveCMSTourAction(tour: Partial<CMSTourPackageItem>): Prom
       is_featured: Boolean(tour.isFeatured),
       status: tour.status || "published",
       display_order: Number(tour.displayOrder) || 0,
-      seo_title: tour.seoTitle?.trim() || null,
-      meta_description: tour.metaDescription?.trim() || null,
+      seo_title: seoTitleVal,
+      meta_description: metaDescVal,
+      seo_description: metaDescVal,
+      is_published: tour.status === "published",
       updated_at: new Date().toISOString(),
     };
 
@@ -748,8 +793,9 @@ export async function saveCMSVehicleCategoryAction(cat: Partial<CMSVehicleCatego
     const supabase = createSupabaseServerClient();
     if (!supabase) return { success: false, error: "Database client unavailable." };
 
+    const nameVal = cat.name.trim();
     const payload = {
-      name: cat.name.trim(),
+      name: nameVal,
       slug: cat.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-"),
       seating_capacity: cat.seatingCapacity.trim(),
       min_passengers: Number(cat.minPassengers) || 1,
@@ -763,6 +809,7 @@ export async function saveCMSVehicleCategoryAction(cat: Partial<CMSVehicleCatego
       is_featured: Boolean(cat.isFeatured),
       status: cat.status || "published",
       display_order: Number(cat.displayOrder) || 0,
+      is_published: cat.status === "published",
     };
 
     let targetId = cat.id;

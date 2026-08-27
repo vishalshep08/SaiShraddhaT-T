@@ -138,6 +138,19 @@ export function Footer({ logoUrl }: FooterProps) {
               Staff Login
             </Link>
           </div>
+          <div className="flex items-center gap-2 text-stone-400">
+            <span>Made with</span>
+            <Heart className="w-3.5 h-3.5 text-brand-saffron-400" />
+            <span>by</span>
+            <a
+              href="https://wa.me/919876543210?text=Hello%20Vishal%20Shep,%20I%20would%20like%20to%20inquire%20about%20your%20services."
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-stone-300 transition-colors"
+            >
+              Vishal Shep
+            </a>
+          </div>
         </div>
       </div>
     </footer>

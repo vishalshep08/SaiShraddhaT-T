@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { getAdminSession } from "@/actions/authActions";
+import { getBrandingSettingsAction } from "@/actions/brandingActions";
 
 export const dynamic = "force-dynamic";
 
@@ -19,11 +20,18 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getAdminSession();
+  const [user, branding] = await Promise.all([
+    getAdminSession(),
+    getBrandingSettingsAction(),
+  ]);
 
   // If user is authenticated, wrap in responsive AdminShell
   if (user) {
-    return <AdminShell user={user}>{children}</AdminShell>;
+    return (
+      <AdminShell user={user} logoUrl={branding.logoUrl}>
+        {children}
+      </AdminShell>
+    );
   }
 
   // Fallback for unauthenticated/login view

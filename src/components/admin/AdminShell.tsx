@@ -8,17 +8,18 @@ import { X } from "lucide-react";
 
 interface AdminShellProps {
   user: AdminProfile | null;
+  logoUrl?: string;
   children: React.ReactNode;
 }
 
-export function AdminShell({ user, children }: AdminShellProps) {
+export function AdminShell({ user, logoUrl, children }: AdminShellProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="flex h-screen w-full bg-stone-50 text-brand-charcoal-900 overflow-hidden font-sans">
       {/* 1. Desktop Persistent Sidebar (lg+) */}
       <div className="hidden lg:flex lg:w-64 lg:shrink-0 h-full">
-        <AdminSidebar className="w-64 h-full" />
+        <AdminSidebar logoUrl={logoUrl} className="w-64 h-full" />
       </div>
 
       {/* 2. Mobile Drawer & Backdrop (< lg) */}
@@ -46,6 +47,7 @@ export function AdminShell({ user, children }: AdminShellProps) {
             </div>
 
             <AdminSidebar
+              logoUrl={logoUrl}
               onItemClick={() => setIsMobileMenuOpen(false)}
               className="w-full h-full"
             />

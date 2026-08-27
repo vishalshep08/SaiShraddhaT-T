@@ -40,8 +40,10 @@ export function HorizontalCarousel({
   className,
 }: HorizontalCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [isPrefersReducedMotion, setIsPrefersReducedMotion] = useState(false);
 
   const items = Children.toArray(children).filter(isValidElement);
@@ -61,6 +63,24 @@ export function HorizontalCarousel({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  // Track visibility with IntersectionObserver so autoplay only runs when visible
+  useEffect(() => {
+    if (!containerRef.current || typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setIsVisible(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   // Update active index on scroll
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
@@ -74,7 +94,7 @@ export function HorizontalCarousel({
     setActiveIndex(Math.min(Math.max(newIndex, 0), totalItems - 1));
   }, [totalItems]);
 
-  // Scroll to a specific item
+  // Scroll to a specific item strictly inside the horizontal container without touching window vertical scroll
   const scrollToIndex = useCallback(
     (index: number) => {
       if (!scrollRef.current) return;
@@ -82,10 +102,11 @@ export function HorizontalCarousel({
       const targetChild = container.children[index] as HTMLElement;
 
       if (targetChild) {
-        targetChild.scrollIntoView({
+        // Compute left offset relative to scroll container
+        const targetLeft = targetChild.offsetLeft - container.offsetLeft;
+        container.scrollTo({
+          left: targetLeft,
           behavior: isPrefersReducedMotion ? "auto" : "smooth",
-          block: "nearest",
-          inline: "start",
         });
       }
     },
@@ -102,21 +123,22 @@ export function HorizontalCarousel({
     scrollToIndex(prevIndex);
   }, [activeIndex, totalItems, scrollToIndex]);
 
-  // Autoplay handler
+  // Autoplay handler — only fires when element is visible in viewport and not paused
   useEffect(() => {
-    if (!autoplay || isPaused || isPrefersReducedMotion || totalItems <= 1) return;
+    if (!autoplay || isPaused || !isVisible || isPrefersReducedMotion || totalItems <= 1) return;
 
     const timer = setInterval(() => {
       handleNext();
     }, autoplayInterval);
 
     return () => clearInterval(timer);
-  }, [autoplay, isPaused, isPrefersReducedMotion, totalItems, autoplayInterval, handleNext]);
+  }, [autoplay, isPaused, isVisible, isPrefersReducedMotion, totalItems, autoplayInterval, handleNext]);
 
   // If desktopMode is "grid", render responsive grid on desktop & horizontal snap carousel on mobile
   if (desktopMode === "grid") {
     return (
       <div
+        ref={containerRef}
         className={cn("w-full relative select-none", className)}
         role="region"
         aria-roledescription="carousel"
@@ -194,6 +216,7 @@ export function HorizontalCarousel({
   // Full Multi-item Carousel on all viewports (when desktopMode is "carousel")
   return (
     <div
+      ref={containerRef}
       className={cn("w-full relative select-none", className)}
       role="region"
       aria-roledescription="carousel"

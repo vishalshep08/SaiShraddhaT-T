@@ -9,7 +9,11 @@ import { buildWhatsAppLink, buildPhoneLink, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
 import { BusinessLogo } from "@/components/shared/BusinessLogo";
 
-export function Header() {
+interface HeaderProps {
+  logoUrl?: string;
+}
+
+export function Header({ logoUrl }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -66,7 +70,7 @@ export function Header() {
         <div className="flex items-center justify-between h-20 py-2">
           {/* Global Business Logo */}
           <Link href="/" className="flex items-center group">
-            <BusinessLogo size="md" variant="header" />
+            <BusinessLogo size="md" variant="header" customLogoUrl={logoUrl} />
           </Link>
 
           {/* Desktop Nav Links */}
@@ -90,42 +94,45 @@ export function Header() {
             })}
           </nav>
 
-          {/* Desktop CTAs */}
-          <div className="hidden sm:flex items-center gap-3">
+          {/* Desktop Quick Actions */}
+          <div className="hidden lg:flex items-center gap-3">
             <a
               href={buildWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-md border border-emerald-600 text-emerald-800 bg-emerald-50/50 hover:bg-emerald-100 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors border border-emerald-200 shadow-xs"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />
-              WhatsApp Us
+              <MessageSquare className="w-4 h-4 text-emerald-600" />
+              <span>Chat on WhatsApp</span>
             </a>
 
             <Link
-              href="/#quick-enquiry"
-              className="inline-flex items-center justify-center font-medium rounded-md transition-colors bg-brand-maroon text-white hover:bg-brand-maroon-800 shadow-sm h-9 px-3.5 text-xs"
+              href="/get-quote"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-maroon text-white text-xs font-bold hover:bg-brand-maroon-800 transition-colors shadow-xs"
             >
-              Get a Quote
+              <span>Get Cab Quote</span>
             </Link>
           </div>
 
-          {/* Mobile Header Actions */}
+          {/* Mobile Quick Action Buttons & Menu Trigger */}
           <div className="flex items-center gap-2 lg:hidden">
             <a
-              href={buildPhoneLink()}
-              className="p-2 rounded-md bg-brand-ivory-200 text-brand-maroon hover:bg-brand-ivory-300"
-              aria-label="Call business"
+              href={buildWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200"
+              aria-label="Chat on WhatsApp"
             >
-              <Phone className="w-5 h-5" />
+              <MessageSquare className="w-4 h-4 text-emerald-600" />
             </a>
 
-            <Link
-              href="/#quick-enquiry"
-              className="inline-flex items-center justify-center font-medium rounded-md transition-colors bg-brand-maroon text-white hover:bg-brand-maroon-800 shadow-sm h-9 px-3 text-xs"
+            <a
+              href={buildPhoneLink(rameshContact.primaryPhoneRaw)}
+              className="p-2 rounded-md bg-brand-maroon-50 text-brand-maroon border border-brand-maroon-200"
+              aria-label="Call Ramesh Shep (Owner)"
             >
-              Quote
-            </Link>
+              <Phone className="w-4 h-4" />
+            </a>
 
             <button
               type="button"
@@ -178,15 +185,17 @@ export function Header() {
               </a>
             </div>
 
-            <a
-              href={buildWhatsAppLink()}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 rounded-md bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Chat on WhatsApp Direct
-            </a>
+            <div>
+              <a
+                href={buildWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between py-2.5 px-3 rounded-md bg-emerald-50 border border-emerald-300 text-xs font-semibold text-emerald-800"
+              >
+                <span>WhatsApp Message</span>
+                <span className="text-emerald-700">Chat Now →</span>
+              </a>
+            </div>
           </div>
         </div>
       )}

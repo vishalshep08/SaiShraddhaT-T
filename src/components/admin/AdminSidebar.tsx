@@ -76,10 +76,11 @@ export const ADMIN_NAV_GROUPS: NavGroup[] = [
 
 interface AdminSidebarProps {
   onItemClick?: () => void;
+  logoUrl?: string;
   className?: string;
 }
 
-export function AdminSidebar({ onItemClick, className }: AdminSidebarProps) {
+export function AdminSidebar({ onItemClick, logoUrl, className }: AdminSidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -90,21 +91,13 @@ export function AdminSidebar({ onItemClick, className }: AdminSidebarProps) {
       )}
     >
       {/* Brand Header */}
-      <div className="p-5 border-b border-brand-charcoal-800 bg-brand-charcoal-950/60">
+      <div className="p-4 border-b border-brand-charcoal-800 bg-brand-charcoal-950/60">
         <Link href="/admin/dashboard" onClick={onItemClick} className="block">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-brand-maroon text-white flex items-center justify-center font-extrabold text-xs border border-brand-maroon-700 shrink-0 shadow-xs">
-              SS
-            </div>
-            <div className="overflow-hidden">
-              <span className="font-extrabold text-sm tracking-tight text-white block truncate leading-tight uppercase">
-                Sai Shraddha
-              </span>
-              <span className="text-[10px] text-brand-saffron-300 font-semibold block truncate leading-tight">
-                Admin Workspace • Shirdi
-              </span>
-            </div>
-          </div>
+          <BusinessLogo
+            size="sm"
+            variant="admin"
+            customLogoUrl={logoUrl}
+          />
         </Link>
       </div>
 

@@ -8,7 +8,11 @@ import { BUSINESS_CONFIG, CORE_SERVICES, POPULAR_DESTINATIONS, PILGRIMAGE_PACKAG
 import { buildWhatsAppLink, buildPhoneLink } from "@/lib/utils";
 import { BusinessLogo } from "@/components/shared/BusinessLogo";
 
-export function Footer() {
+interface FooterProps {
+  logoUrl?: string;
+}
+
+export function Footer({ logoUrl }: FooterProps) {
   const pathname = usePathname();
   const ramesh = BUSINESS_CONFIG.contacts[0];
 
@@ -22,7 +26,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Col 1: Brand & Historical Identity (2 cols on lg) */}
           <div className="lg:col-span-2 space-y-4">
-            <BusinessLogo size="md" variant="footer" />
+            <BusinessLogo size="md" variant="footer" customLogoUrl={logoUrl} />
 
             <p className="text-sm text-stone-400 leading-relaxed max-w-md">
               A trusted local tours, taxi and pilgrimage car rental service operating continuously from Shirdi since 2014. Directly managing owned Maruti Ertiga and Chevrolet Tavera vehicles for safe, peaceful journeys.
@@ -43,16 +47,13 @@ export function Footer() {
 
           {/* Col 2: Services */}
           <div>
-            <h4 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-brand-maroon pl-2">
+            <h4 className="text-white font-bold text-sm mb-4 border-l-2 border-brand-maroon pl-2">
               Our Services
             </h4>
             <ul className="space-y-2 text-xs">
               {CORE_SERVICES.map((s) => (
                 <li key={s.slug}>
-                  <Link
-                    href={`/services#${s.slug}`}
-                    className="text-stone-400 hover:text-white transition-colors"
-                  >
+                  <Link href={`/services#${s.slug}`} className="hover:text-brand-saffron-300 transition-colors">
                     {s.title}
                   </Link>
                 </li>
@@ -60,86 +61,81 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Popular Routes & Packages */}
+          {/* Col 3: Popular Routes */}
           <div>
-            <h4 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-brand-maroon pl-2">
-              Pilgrimage & Tours
+            <h4 className="text-white font-bold text-sm mb-4 border-l-2 border-brand-maroon pl-2">
+              Popular Routes
             </h4>
             <ul className="space-y-2 text-xs">
-              {PILGRIMAGE_PACKAGES.slice(0, 5).map((p) => (
-                <li key={p.slug}>
-                  <Link
-                    href={`/packages#${p.slug}`}
-                    className="text-stone-400 hover:text-white transition-colors"
-                  >
-                    {p.title}
+              {POPULAR_DESTINATIONS.slice(0, 5).map((d) => (
+                <li key={d.slug}>
+                  <Link href={`/destinations#${d.slug}`} className="hover:text-brand-saffron-300 transition-colors">
+                    Shirdi to {d.name} Taxi
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/services#airport" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi Airport (SAG) Drop
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* Col 4: Verified Contacts */}
-          <div className="space-y-4">
-            <h4 className="text-white font-semibold text-xs uppercase tracking-wider mb-4 border-l-2 border-brand-maroon pl-2">
-              Owner &amp; Direct Booking
+          {/* Col 4: Contact & Direct Desk */}
+          <div>
+            <h4 className="text-white font-bold text-sm mb-4 border-l-2 border-brand-saffron pl-2 text-brand-saffron-300">
+              Direct Contact
             </h4>
-
             <div className="space-y-3 text-xs">
-              <div className="p-3 rounded-xl bg-stone-800/60 border border-stone-700/80 space-y-1.5">
-                <div className="font-bold text-brand-saffron-300">Ramesh Shep (Owner):</div>
-                <p className="text-stone-400 text-[11px]">Direct bookings &amp; fleet management</p>
-                <div className="flex flex-col gap-1 pt-1">
-                  <a
-                    href={buildPhoneLink(ramesh.primaryPhoneRaw)}
-                    className="hover:text-white transition-colors flex items-center gap-1.5 font-semibold text-white"
-                  >
-                    <Phone className="w-3.5 h-3.5 text-brand-saffron-400" />
-                    <span>{ramesh.primaryPhone}</span>
-                  </a>
-                </div>
+              <div>
+                <span className="text-stone-400 block text-[11px]">Sole Owner & Manager:</span>
+                <span className="font-semibold text-white">Ramesh Shep</span>
               </div>
 
               <div>
+                <span className="text-stone-400 block text-[11px]">Mobile / WhatsApp:</span>
+                <a
+                  href={buildPhoneLink(ramesh.primaryPhoneRaw)}
+                  className="font-bold text-brand-saffron-300 hover:underline block"
+                >
+                  {ramesh.primaryPhone}
+                </a>
+              </div>
+
+              <div>
+                <span className="text-stone-400 block text-[11px]">Primary Email:</span>
+                <span className="text-stone-300">{BUSINESS_CONFIG.email}</span>
+              </div>
+
+              <div className="pt-2">
                 <a
                   href={buildWhatsAppLink()}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-medium"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-700 text-white font-semibold text-xs hover:bg-emerald-600 transition-colors"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  Chat on WhatsApp Direct
+                  <span>WhatsApp Message</span>
                 </a>
-              </div>
-
-              <div className="pt-2 text-[11px] text-stone-500 font-medium">
-                ॥ ॐ साईं राम ॥ — Dedicated to Shirdi Devotees
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <p>
-            © {new Date().getFullYear()} {BUSINESS_CONFIG.name}. Serving Shirdi since {BUSINESS_CONFIG.establishedYear}.
-          </p>
+        {/* Bottom Strip */}
+        <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400 text-center sm:text-left">
+          <div>
+            © {new Date().getFullYear()} {BUSINESS_CONFIG.name}. All rights reserved. Operating in Shirdi since {BUSINESS_CONFIG.establishedYear}.
+          </div>
 
-          <div className="flex items-center gap-4 flex-wrap justify-center">
-            <Link href="/reviews" className="hover:text-stone-300">
-              Customer Reviews
-            </Link>
+          <div className="flex items-center gap-4 text-stone-400">
+            <span>Direct Pilgrimage Transport</span>
             <span>•</span>
-            <Link href="/about" className="hover:text-stone-300">
-              About Us
-            </Link>
+            <span className="text-brand-saffron-400">॥ ॐ साईं राम ॥</span>
             <span>•</span>
-            <Link href="/privacy-policy" className="hover:text-stone-400">
-              Privacy Policy
-            </Link>
-            <span>•</span>
-            <Link href="/terms-and-conditions" className="hover:text-stone-400">
-              Terms &amp; Conditions
+            <Link href="/admin/login" className="hover:text-stone-300 transition-colors">
+              Staff Login
             </Link>
           </div>
         </div>

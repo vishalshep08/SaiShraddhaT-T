@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, Lock, Mail, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { adminLoginAction } from "@/actions/authActions";
+import { getBrandingSettingsAction } from "@/actions/brandingActions";
 import { Button } from "@/components/ui/Button";
 import { BusinessLogo } from "@/components/shared/BusinessLogo";
 
@@ -12,6 +13,15 @@ export default function AdminLoginPage() {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [logoUrl, setLogoUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    getBrandingSettingsAction().then((settings) => {
+      if (settings?.logoUrl) {
+        setLogoUrl(settings.logoUrl);
+      }
+    });
+  }, []);
 
   const handleFormAction = async (formData: FormData) => {
     setError(null);
@@ -38,7 +48,12 @@ export default function AdminLoginPage() {
         {/* Brand Header */}
         <div className="text-center space-y-3">
           <div className="flex justify-center">
-            <BusinessLogo size="lg" variant="login" showTagline={false} />
+            <BusinessLogo
+              size="lg"
+              variant="login"
+              customLogoUrl={logoUrl}
+              showTagline={false}
+            />
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">

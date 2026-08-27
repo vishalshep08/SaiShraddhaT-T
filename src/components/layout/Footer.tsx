@@ -21,7 +21,7 @@ export function Footer({ logoUrl }: FooterProps) {
   }
 
   return (
-    <footer className="bg-brand-charcoal-900 text-stone-300 pt-16 pb-24 md:pb-12 border-t border-stone-800">
+    <footer className="bg-brand-charcoal-900 text-stone-300 pt-16 pb-28 md:pb-12 border-t border-stone-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Col 1: Brand & Historical Identity (2 cols on lg) */}
@@ -124,7 +124,7 @@ export function Footer({ logoUrl }: FooterProps) {
         </div>
 
         {/* Bottom Strip */}
-        <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-400 text-center sm:text-left">
+        <div className="mt-12 pt-6 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-stone-400 text-center md:text-left">
           <div>
             © {new Date().getFullYear()} {BUSINESS_CONFIG.name}. All rights reserved. Operating in Shirdi since {BUSINESS_CONFIG.establishedYear}.
           </div>
@@ -132,25 +132,27 @@ export function Footer({ logoUrl }: FooterProps) {
           <div className="flex items-center gap-4 text-stone-400">
             <span>Direct Pilgrimage Transport</span>
             <span>•</span>
-            <span className="text-brand-saffron-400">॥ ॐ साईं राम ॥</span>
+            <span className="text-brand-saffron-400 font-semibold">॥ ॐ साईं राम ॥</span>
             <span>•</span>
             <Link href="/admin/login" className="hover:text-stone-300 transition-colors">
               Staff Login
             </Link>
           </div>
-          <div className="flex items-center gap-2 text-stone-400">
-            <span>Made with</span>
-            <Heart className="w-3.5 h-3.5 text-brand-saffron-400" />
-            <span>by</span>
-            <a
-              href="https://wa.me/919876543210?text=Hello%20Vishal%20Shep,%20I%20would%20like%20to%20inquire%20about%20your%20services."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-stone-300 transition-colors"
-            >
-              Vishal Shep
-            </a>
-          </div>
+        </div>
+
+        {/* Developer Credit Strip */}
+        <div className="mt-4 pt-4 border-t border-stone-800/60 flex items-center justify-center gap-1.5 text-xs text-stone-400">
+          <span>Made with</span>
+          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500 inline-block" />
+          <span>by</span>
+          <a
+            href="https://wa.me/919689541883?text=Hello%20Vishal%20Shep,%20I%20would%20like%20to%20inquire%20about%20your%20services."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-brand-saffron-300 hover:text-brand-saffron-200 transition-colors underline underline-offset-2"
+          >
+            Vishal Shep
+          </a>
         </div>
       </div>
     </footer>

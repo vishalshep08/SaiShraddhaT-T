@@ -13,7 +13,7 @@ export function constructMetadata({
   title,
   description,
   canonicalPath = "/",
-  ogImage = "/og-image.jpg",
+  ogImage = "/images/branding/og-image.png",
   noIndex = false,
 }: SEOProps = {}): Metadata {
   let pageTitle = `${BUSINESS_CONFIG.name} — Trusted Shirdi Taxi & Tour Service Since ${BUSINESS_CONFIG.establishedYear}`;
@@ -38,6 +38,17 @@ export function constructMetadata({
     alternates: {
       canonical: canonicalUrl,
     },
+    icons: {
+      icon: [
+        { url: "/icon.png", sizes: "64x64", type: "image/png" },
+        { url: "/images/branding/logo-emblem.png", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [
+        { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      ],
+      shortcut: ["/icon.png"],
+    },
+    manifest: "/manifest.json",
     openGraph: {
       title: pageTitle,
       description: pageDescription,
@@ -48,7 +59,7 @@ export function constructMetadata({
           url: ogImage.startsWith("http") ? ogImage : `${BUSINESS_CONFIG.siteUrl}${ogImage}`,
           width: 1200,
           height: 630,
-          alt: `${BUSINESS_CONFIG.name} — Serving Since ${BUSINESS_CONFIG.establishedYear}`,
+          alt: `${BUSINESS_CONFIG.name} — Shirdi (Serving Since ${BUSINESS_CONFIG.establishedYear})`,
         },
       ],
       locale: "en_IN",
@@ -89,6 +100,8 @@ export function getLocalBusinessSchema() {
     email: BUSINESS_CONFIG.email,
     foundingDate: "2014",
     priceRange: "₹₹",
+    logo: `${BUSINESS_CONFIG.siteUrl}/images/branding/official-logo.png`,
+    image: `${BUSINESS_CONFIG.siteUrl}/images/branding/og-image.png`,
     address: {
       "@type": "PostalAddress",
       streetAddress: "Sai Ashram (Bhakta Niwas 1000 Rooms)",
@@ -99,23 +112,9 @@ export function getLocalBusinessSchema() {
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: BUSINESS_CONFIG.locationCoordinates.lat,
-      longitude: BUSINESS_CONFIG.locationCoordinates.lng,
+      latitude: "19.7667",
+      longitude: "74.4767",
     },
-    areaServed: [
-      "Shirdi",
-      "Nashik",
-      "Trimbakeshwar",
-      "Shani Shingnapur",
-      "Aurangabad",
-      "Ellora",
-      "Ajanta",
-      "Pune",
-      "Mumbai",
-      "Bhimashankar",
-      "Vani",
-      "Maharashtra",
-    ],
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: [

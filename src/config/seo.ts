@@ -10,7 +10,7 @@ export const SITE_CONFIG = {
   tagline: "Trusted Shirdi Taxi, Outstation Cabs & Pilgrimage Darshan Tours Since 2014",
   establishedYear: 2014,
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://saishraddhatravels.com",
-  defaultOgImage: "/images/hero-shirdi-temple.jpg",
+  defaultOgImage: "/images/branding/og-image.png",
   locale: "en_IN",
   language: "en",
 

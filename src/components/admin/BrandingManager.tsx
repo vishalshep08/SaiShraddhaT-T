@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import { BrandingSettings } from "@/types/branding";
+import { BrandingSettings, DEFAULT_BRANDING } from "@/types/branding";
 import { updateBrandingSettingsAction, removeLogoAction } from "@/actions/brandingActions";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -16,6 +16,8 @@ import {
   RefreshCw,
   Palette,
   Eye,
+  Smartphone,
+  Globe,
 } from "lucide-react";
 
 interface BrandingManagerProps {
@@ -26,7 +28,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
   const [settings, setSettings] = useState<BrandingSettings>(initialSettings);
   const [logoPreview, setLogoPreview] = useState<string | null>(initialSettings.logoUrl || null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [altText, setAltText] = useState(initialSettings.logoAltText || "Sai Shraddha Tours & Travels, Shirdi");
+  const [altText, setAltText] = useState(initialSettings.logoAltText || DEFAULT_BRANDING.logoAltText || "Sai Shraddha Tours & Travels - Shirdi");
   const [businessName, setBusinessName] = useState(initialSettings.businessName);
   const [tagline, setTagline] = useState(initialSettings.tagline);
 
@@ -73,7 +75,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
         setSettings(res.settings);
         setLogoPreview(res.settings.logoUrl || null);
         setSelectedFile(null);
-        setMessage({ type: "success", text: "Business branding & logo updated successfully!" });
+        setMessage({ type: "success", text: "Business branding & logo updated successfully across the website!" });
       } else {
         setMessage({ type: "error", text: res.error || "Failed to save branding settings." });
       }
@@ -81,7 +83,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
   };
 
   const handleResetToDefault = () => {
-    if (!confirm("Are you sure you want to remove the custom logo and use the default brand mark?")) {
+    if (!confirm("Are you sure you want to restore the official master logo?")) {
       return;
     }
 
@@ -89,10 +91,14 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
     startTransition(async () => {
       const res = await removeLogoAction();
       if (res.success) {
-        setSettings((prev) => ({ ...prev, logoUrl: undefined, logoStoragePath: undefined }));
-        setLogoPreview(null);
+        setSettings((prev) => ({
+          ...prev,
+          logoUrl: DEFAULT_BRANDING.logoUrl,
+          logoStoragePath: undefined,
+        }));
+        setLogoPreview(DEFAULT_BRANDING.logoUrl || null);
         setSelectedFile(null);
-        setMessage({ type: "success", text: "Custom logo removed. Default brand mark restored." });
+        setMessage({ type: "success", text: "Official master logo restored." });
       } else {
         setMessage({ type: "error", text: res.error || "Failed to reset logo." });
       }
@@ -114,7 +120,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-stone-500 mt-1">
-            Manage the business logo and branding displayed across the public website and admin workspace.
+            Manage the business logo, emblem, and branding displayed dynamically across the public website and admin workspace.
           </p>
         </div>
 
@@ -167,7 +173,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
           <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-5">
             <h2 className="text-base font-bold text-brand-charcoal-900 flex items-center gap-2">
               <Upload className="w-4 h-4 text-brand-maroon" />
-              Upload Business Logo
+              Official Business Logo
             </h2>
 
             <div className="space-y-3">
@@ -179,10 +185,10 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
                   <ImageIcon className="w-6 h-6" />
                 </div>
                 <p className="text-xs font-bold text-brand-charcoal-900 group-hover:text-brand-maroon">
-                  Click to select logo image
+                  Click to select replacement logo
                 </p>
                 <p className="text-[11px] text-stone-500 mt-1">
-                  Recommended: Transparent PNG or WebP • Max 3MB
+                  Recommended: High-resolution PNG or WebP • Max 3MB
                 </p>
                 <input
                   id="logo-upload"
@@ -194,9 +200,9 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
               </label>
 
               {logoPreview && (
-                <div className="flex items-center justify-between p-3 bg-stone-50 rounded-xl border border-stone-200">
+                <div className="flex items-center justify-between p-3.5 bg-stone-50 rounded-xl border border-stone-200">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <div className="w-10 h-10 bg-white border border-stone-200 rounded-lg flex items-center justify-center p-1 shrink-0">
+                    <div className="h-12 w-28 bg-white border border-stone-200 rounded-lg flex items-center justify-center p-1 shrink-0">
                       <img
                         src={logoPreview}
                         alt="Preview"
@@ -205,10 +211,10 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
                     </div>
                     <div className="truncate">
                       <p className="text-xs font-bold text-brand-charcoal-900 truncate">
-                        {selectedFile ? selectedFile.name : "Custom Logo Active"}
+                        {selectedFile ? selectedFile.name : "Active Business Logo"}
                       </p>
                       <p className="text-[10px] text-emerald-700 font-semibold">
-                        {selectedFile ? `${Math.round(selectedFile.size / 1024)} KB selected` : "Live on platform"}
+                        {selectedFile ? `${Math.round(selectedFile.size / 1024)} KB selected (Unsaved)` : "Live on platform"}
                       </p>
                     </div>
                   </div>
@@ -218,10 +224,10 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
                     onClick={handleResetToDefault}
                     variant="outline"
                     size="sm"
-                    className="text-xs text-rose-700 hover:bg-rose-50 border-rose-200 h-8"
-                    leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+                    className="text-xs text-stone-600 hover:text-rose-700 hover:bg-rose-50 border-stone-300 h-8"
+                    leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
                   >
-                    Remove Logo
+                    Restore Official
                   </Button>
                 </div>
               )}
@@ -237,7 +243,7 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
                 type="text"
                 value={altText}
                 onChange={(e) => setAltText(e.target.value)}
-                placeholder="Sai Shraddha Tours & Travels, Shirdi"
+                placeholder="Sai Shraddha Tours & Travels - Shirdi (Serving Since 2014)"
                 className="w-full px-3.5 py-2.5 rounded-xl border border-stone-300 text-xs sm:text-sm text-brand-charcoal-900 bg-white focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon"
               />
               <p className="text-[11px] text-stone-400">
@@ -304,10 +310,26 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
               </div>
             </div>
 
-            {/* Context 2: Public Footer (Dark Charcoal background) */}
+            {/* Context 2: Mobile Navbar */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-stone-400 flex items-center gap-1">
+                <Smartphone className="w-3.5 h-3.5 text-stone-400" />
+                <span>2. Mobile Header (Compact)</span>
+              </p>
+              <div className="p-3 bg-white rounded-xl border border-stone-200 shadow-xs flex items-center justify-between">
+                <BusinessLogo
+                  size="sm"
+                  variant="mobile"
+                  customLogoUrl={logoPreview || undefined}
+                />
+                <span className="text-[10px] font-bold text-stone-400 uppercase bg-stone-100 px-2 py-1 rounded">Menu</span>
+              </div>
+            </div>
+
+            {/* Context 3: Public Footer (Dark Charcoal background) */}
             <div className="space-y-2">
               <p className="text-[11px] font-extrabold uppercase tracking-wider text-stone-400">
-                2. Website Footer (Dark)
+                3. Website Footer (Dark)
               </p>
               <div className="p-4 bg-brand-charcoal-900 text-white rounded-xl border border-stone-800 shadow-xs flex items-center">
                 <BusinessLogo
@@ -318,10 +340,32 @@ export function BrandingManager({ initialSettings }: BrandingManagerProps) {
               </div>
             </div>
 
-            {/* Context 3: Admin Sidebar */}
+            {/* Context 4: Favicon & App Icon Mark */}
+            <div className="space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-stone-400 flex items-center gap-1">
+                <Globe className="w-3.5 h-3.5 text-stone-400" />
+                <span>4. Browser Favicon &amp; App Icon</span>
+              </p>
+              <div className="p-3 bg-stone-100 rounded-xl border border-stone-200 shadow-xs flex items-center gap-4">
+                <BusinessLogo
+                  size="icon-only"
+                  variant="icon-only"
+                />
+                <div className="space-y-0.5">
+                  <span className="text-xs font-bold text-brand-charcoal-900 block">
+                    Circular Sai Baba &amp; Temple Emblem
+                  </span>
+                  <span className="text-[10px] text-stone-500 block">
+                    Optimized for 16px, 32px, 180px &amp; 512px app icon display
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Context 5: Admin Sidebar */}
             <div className="space-y-2">
               <p className="text-[11px] font-extrabold uppercase tracking-wider text-stone-400">
-                3. Admin Sidebar (Compact)
+                5. Admin Sidebar (Compact)
               </p>
               <div className="p-3 bg-brand-charcoal-950 text-white rounded-xl border border-stone-800 shadow-xs flex items-center">
                 <BusinessLogo

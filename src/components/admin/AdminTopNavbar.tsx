@@ -7,13 +7,15 @@ import { AdminProfile } from "@/types/admin";
 import { adminLogoutAction } from "@/actions/authActions";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { BusinessLogo } from "@/components/shared/BusinessLogo";
 
 interface AdminTopNavbarProps {
   user: AdminProfile | null;
+  logoUrl?: string;
   onToggleMobileMenu: () => void;
 }
 
-export function AdminTopNavbar({ user, onToggleMobileMenu }: AdminTopNavbarProps) {
+export function AdminTopNavbar({ user, logoUrl, onToggleMobileMenu }: AdminTopNavbarProps) {
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-stone-200 shadow-xs h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 select-none">
       {/* Left: Mobile Drawer Trigger & Workspace Badge */}
@@ -27,8 +29,12 @@ export function AdminTopNavbar({ user, onToggleMobileMenu }: AdminTopNavbarProps
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2">
-          <Badge variant="maroon" size="sm" className="hidden sm:inline-flex">
+        <div className="lg:hidden">
+          <BusinessLogo size="sm" variant="mobile" customLogoUrl={logoUrl} />
+        </div>
+
+        <div className="hidden lg:flex items-center gap-2">
+          <Badge variant="maroon" size="sm">
             Shirdi Operations Desk
           </Badge>
           <span className="text-xs text-stone-400 font-medium hidden md:inline">
@@ -59,19 +65,19 @@ export function AdminTopNavbar({ user, onToggleMobileMenu }: AdminTopNavbarProps
             <span className="text-xs font-bold text-brand-charcoal-900 leading-tight">
               {user?.name || "Ramesh Shep"}
             </span>
-            <span className="text-[10px] text-stone-500 font-medium leading-tight">
-              {user?.role === "staff" ? "Operations Staff" : "Owner & Lead Admin"}
+            <span className="text-[10px] text-stone-500 font-semibold uppercase tracking-wider leading-tight">
+              {user?.role === "admin" ? "Owner / Admin" : "Staff"}
             </span>
           </div>
         </div>
 
-        {/* Sign Out Action */}
+        {/* Sign Out Button */}
         <form action={adminLogoutAction}>
           <Button
             type="submit"
-            size="sm"
             variant="outline"
-            className="h-8 px-2.5 text-xs text-rose-700 border-rose-200 hover:bg-rose-50 hover:border-rose-300 font-semibold"
+            size="sm"
+            className="text-xs text-stone-600 hover:text-rose-700 hover:bg-rose-50 border-stone-200 h-8"
             leftIcon={<LogOut className="w-3.5 h-3.5" />}
           >
             <span className="hidden sm:inline">Sign Out</span>

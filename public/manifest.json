@@ -1,0 +1,23 @@
+{
+  "name": "Sai Shraddha Tours & Travels, Shirdi",
+  "short_name": "Sai Shraddha T&T",
+  "description": "Shirdi's trusted taxi, pilgrimage and outstation cab service operating since 2014 from Sai Ashram. Owned Ertiga & Tavera fleet.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#7E1D2D",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -60,6 +60,7 @@ export function AdminShell({ user, logoUrl, children }: AdminShellProps) {
         {/* Top Navbar */}
         <AdminTopNavbar
           user={user}
+          logoUrl={logoUrl}
           onToggleMobileMenu={() => setIsMobileMenuOpen(true)}
         />
 

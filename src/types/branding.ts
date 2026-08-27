@@ -3,6 +3,7 @@ export interface BrandingSettings {
   tagline: string;
   establishedYear: number;
   logoUrl?: string;
+  emblemUrl?: string;
   logoStoragePath?: string;
   logoAltText?: string;
   updatedAt?: string;
@@ -10,7 +11,9 @@ export interface BrandingSettings {
 
 export const DEFAULT_BRANDING: BrandingSettings = {
   businessName: "Sai Shraddha Tours & Travels",
-  tagline: "Sai Ashram (Bhakta Niwas), Shirdi",
+  tagline: "Safe Journeys • Happy Pilgrims • Sai Ashram, Shirdi",
   establishedYear: 2014,
-  logoAltText: "Sai Shraddha Tours & Travels, Shirdi",
+  logoUrl: "/images/branding/official-logo.png",
+  emblemUrl: "/images/branding/logo-emblem.png",
+  logoAltText: "Sai Shraddha Tours & Travels - Shirdi (Serving Customers Since 2014)",
 };

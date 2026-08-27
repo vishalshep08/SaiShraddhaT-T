@@ -9,6 +9,7 @@ import { VehicleCategoryCard } from "@/components/fleet/VehicleCategoryCard";
 import { VehicleComparisonTable } from "@/components/fleet/VehicleComparisonTable";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 export const metadata = constructMetadata({
   title: "Our Fleet — Owned Ertiga, Tavera & On-Demand Cabs in Shirdi",
@@ -23,7 +24,7 @@ export default function FleetPage() {
   const networkVehicles = VEHICLE_CATEGORIES.filter((v) => !v.isOwned);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
       {/* 1. Hero Section */}
       <div className="max-w-3xl space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-maroon-50 border border-brand-maroon-200 text-brand-maroon text-xs font-semibold">
@@ -81,11 +82,17 @@ export default function FleetPage() {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <HorizontalCarousel
+          ariaLabel="Our Owned Vehicles in Shirdi"
+          desktopMode="grid"
+          desktopGridCols="md:grid-cols-2"
+        >
           {ownedVehicles.map((vehicle) => (
-            <VehicleCategoryCard key={vehicle.id} vehicle={vehicle} />
+            <div key={vehicle.id} className="h-full">
+              <VehicleCategoryCard vehicle={vehicle} />
+            </div>
           ))}
-        </div>
+        </HorizontalCarousel>
       </section>
 
       {/* 3. VEHICLES AVAILABLE ON REQUEST SECTION */}
@@ -104,11 +111,17 @@ export default function FleetPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <HorizontalCarousel
+          ariaLabel="Vehicles Available On Request"
+          desktopMode="grid"
+          desktopGridCols="md:grid-cols-2 lg:grid-cols-4"
+        >
           {networkVehicles.map((vehicle) => (
-            <VehicleCategoryCard key={vehicle.id} vehicle={vehicle} />
+            <div key={vehicle.id} className="h-full">
+              <VehicleCategoryCard vehicle={vehicle} />
+            </div>
           ))}
-        </div>
+        </HorizontalCarousel>
       </section>
 
       {/* 4. CHOOSING THE RIGHT VEHICLE COMPARISON TABLE */}
@@ -138,28 +151,26 @@ export default function FleetPage() {
         <Badge variant="saffron" size="md">
           Direct Shirdi Booking Desk
         </Badge>
-        <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-          Need Help Selecting The Right Vehicle?
+        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          Ready to Book a Vehicle for Your Journey?
         </h2>
-        <p className="text-sm sm:text-base text-brand-maroon-100 max-w-2xl mx-auto leading-relaxed">
-          Tell us your passenger count, luggage requirements, and route. We will advise you on the most comfortable and cost-effective vehicle option.
+        <p className="text-sm sm:text-base text-brand-saffron-100 max-w-xl mx-auto">
+          Contact Ramesh Shep directly for clean vehicles, verified drivers, and transparent pricing with no hidden charges.
         </p>
-
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <a
             href={buildWhatsAppLink({
-              customMessage: `Hello ${BUSINESS_CONFIG.name}, I need help choosing a vehicle for my trip from Shirdi.`,
+              customMessage: `Hello Ramesh ji, I would like to book a vehicle from Shirdi.`,
             })}
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Button size="lg" variant="saffron" leftIcon={<MessageSquare className="w-5 h-5 text-emerald-900" />}>
-              Ask For Vehicle Recommendation
+            <Button size="lg" variant="saffron" leftIcon={<MessageSquare className="w-5 h-5" />}>
+              WhatsApp Ramesh (Owner)
             </Button>
           </a>
-
           <a href={buildPhoneLink(ramesh.primaryPhoneRaw)}>
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" leftIcon={<Phone className="w-5 h-5 text-brand-saffron-300" />}>
+            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10" leftIcon={<Phone className="w-5 h-5" />}>
               Call {ramesh.primaryPhone}
             </Button>
           </a>

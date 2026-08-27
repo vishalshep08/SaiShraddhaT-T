@@ -7,17 +7,18 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { getPublicReviewsAction, getSiteSettingsAction } from "@/actions/trustActions";
 import { TestimonialCard } from "@/components/shared/TestimonialCard";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 export async function ReviewsSection() {
   const [reviews, settings] = await Promise.all([
-    getPublicReviewsAction({ featuredOnly: true, limit: 3 }),
+    getPublicReviewsAction({ featuredOnly: true, limit: 6 }),
     getSiteSettingsAction(),
   ]);
 
   const googleReviewUrl = settings.googleReviewUrl;
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
       <div className="text-center max-w-3xl mx-auto space-y-2">
         <Badge variant="maroon" size="sm">
           Traveller Feedback &amp; Trust
@@ -32,11 +33,19 @@ export async function ReviewsSection() {
 
       {reviews.length > 0 ? (
         <div className="space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <HorizontalCarousel
+            ariaLabel="Customer reviews and traveller testimonials"
+            autoplay={true}
+            autoplayInterval={5000}
+            desktopMode="grid"
+            desktopGridCols="md:grid-cols-2 lg:grid-cols-3"
+          >
             {reviews.map((r) => (
-              <TestimonialCard key={r.id} review={r} />
+              <div key={r.id} className="h-full">
+                <TestimonialCard review={r} />
+              </div>
             ))}
-          </div>
+          </HorizontalCarousel>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <Link href="/reviews">
@@ -57,13 +66,13 @@ export async function ReviewsSection() {
         </div>
       ) : (
         /* Review-Ready Container when no reviews are in database yet */
-        <div className="bg-white rounded-2xl p-8 border border-stone-200 shadow-xs max-w-3xl mx-auto text-center space-y-5">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs max-w-3xl mx-auto text-center space-y-5">
           <div className="w-12 h-12 rounded-full bg-brand-saffron-50 text-brand-saffron-800 flex items-center justify-center mx-auto border border-brand-saffron-200">
             <HeartHandshake className="w-6 h-6 text-brand-saffron-600" />
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-lg font-bold text-brand-charcoal-900">
+            <h3 className="text-base sm:text-lg font-bold text-brand-charcoal-900">
               Have You Travelled With Us From Shirdi?
             </h3>
             <p className="text-xs sm:text-sm text-stone-600 leading-relaxed max-w-lg mx-auto">
@@ -78,29 +87,22 @@ export async function ReviewsSection() {
                   Leave a Google Review
                 </Button>
               </a>
-            ) : null}
-
-            <a
-              href={buildWhatsAppLink({
-                customMessage: `Hello ${BUSINESS_CONFIG.name}, I would like to share feedback about my recent trip with your team.`,
-              })}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Button
-                size="md"
-                variant="outline"
-                className="border-emerald-600 text-emerald-800 hover:bg-emerald-50 font-bold"
-                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-600" />}
+            ) : (
+              <a
+                href={buildWhatsAppLink({ drop: "Feedback on Travel Experience" })}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Share Trip Feedback on WhatsApp
-              </Button>
-            </a>
-          </div>
-
-          <div className="pt-4 border-t border-stone-100 flex items-center justify-center gap-2 text-xs text-stone-400">
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Only genuine, verified customer reviews are published on this platform</span>
+                <Button
+                  size="md"
+                  variant="primary"
+                  className="font-bold"
+                  leftIcon={<MessageSquare className="w-4 h-4" />}
+                >
+                  Share Feedback on WhatsApp
+                </Button>
+              </a>
+            )}
           </div>
         </div>
       )}

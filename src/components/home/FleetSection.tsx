@@ -5,13 +5,14 @@ import { FLEET_INFO } from "@/lib/constants";
 import { buildWhatsAppLink } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 export function FleetSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="bg-brand-ivory-200/90 rounded-2xl p-6 sm:p-10 border border-stone-300 space-y-10">
+      <div className="bg-brand-ivory-200/90 rounded-2xl p-5 sm:p-8 lg:p-10 border border-stone-300 space-y-8 sm:space-y-10">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-stone-300 pb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-stone-300 pb-5 sm:pb-6">
           <div className="max-w-2xl">
             <Badge variant="maroon" size="sm" className="mb-2">
               Fleet Transparency
@@ -19,7 +20,7 @@ export function FleetSection() {
             <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
               Our Vehicles & Capacity Options
             </h2>
-            <p className="text-sm sm:text-base text-stone-600 mt-1">
+            <p className="text-xs sm:text-sm text-stone-600 mt-1">
               We own and maintain our core Ertiga and Tavera vehicles in Shirdi. For larger yatra groups or sedans, we coordinate with verified local drivers.
             </p>
           </div>
@@ -34,7 +35,7 @@ export function FleetSection() {
         {/* 1. OWNED VEHICLES */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-bold text-brand-charcoal-900">
+            <h3 className="text-base sm:text-lg font-bold text-brand-charcoal-900">
               Our Owned Fleet
             </h3>
             <Badge variant="green" size="sm">
@@ -43,16 +44,20 @@ export function FleetSection() {
             </Badge>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <HorizontalCarousel
+            ariaLabel="Owned Vehicle Fleet Options"
+            desktopMode="grid"
+            desktopGridCols="md:grid-cols-2"
+          >
             {FLEET_INFO.owned.map((v, i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl p-6 border border-stone-200 shadow-sm space-y-4 flex flex-col justify-between"
+                className="h-full bg-white rounded-xl p-5 sm:p-6 border border-stone-200 shadow-xs space-y-4 flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h4 className="text-lg font-bold text-brand-charcoal-900">
+                      <h4 className="text-base sm:text-lg font-bold text-brand-charcoal-900">
                         {v.name}
                       </h4>
                       <p className="text-xs text-brand-maroon font-semibold mt-0.5">
@@ -66,10 +71,10 @@ export function FleetSection() {
                     {v.description}
                   </p>
 
-                  <div className="grid grid-cols-3 gap-2 pt-2 text-xs text-stone-700 bg-stone-50 p-3 rounded-lg border border-stone-100">
+                  <div className="grid grid-cols-3 gap-2 pt-2 text-xs text-stone-700 bg-stone-50 p-2.5 sm:p-3 rounded-lg border border-stone-100">
                     <div className="flex items-center gap-1.5">
                       <Users className="w-4 h-4 text-brand-maroon shrink-0" />
-                      <span>{v.seating}</span>
+                      <span className="font-semibold">{v.seating}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <Briefcase className="w-4 h-4 text-brand-maroon shrink-0" />
@@ -97,34 +102,38 @@ export function FleetSection() {
                 </div>
               </div>
             ))}
-          </div>
+          </HorizontalCarousel>
         </div>
 
         {/* 2. ON-REQUEST NETWORK VEHICLES */}
         <div className="space-y-4 pt-4 border-t border-stone-300">
           <div className="flex items-center gap-2">
-            <h3 className="text-base font-bold text-brand-charcoal-900">
+            <h3 className="text-sm sm:text-base font-bold text-brand-charcoal-900">
               Vehicles Available On Request (Verified Partner Network)
             </h3>
-            <span className="text-xs text-stone-500 font-medium italic">
+            <span className="text-xs text-stone-500 font-medium italic hidden sm:inline">
               • Available subject to confirmation
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <HorizontalCarousel
+            ariaLabel="Partner Network Vehicle Options"
+            desktopMode="grid"
+            desktopGridCols="sm:grid-cols-2 lg:grid-cols-4"
+          >
             {FLEET_INFO.network.map((nv, idx) => (
               <div
                 key={idx}
-                className="bg-white/80 rounded-lg p-4 border border-stone-200 space-y-2 flex flex-col justify-between"
+                className="h-full bg-white/90 rounded-xl p-4 border border-stone-200 space-y-2 flex flex-col justify-between"
               >
-                <div>
+                <div className="space-y-1.5">
                   <h4 className="text-sm font-bold text-brand-charcoal-900">
                     {nv.name}
                   </h4>
-                  <p className="text-[11px] text-stone-500 font-medium">
+                  <p className="text-[11px] text-brand-maroon font-semibold">
                     {nv.seating} • {nv.luggage}
                   </p>
-                  <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
+                  <p className="text-xs text-stone-600 leading-relaxed">
                     {nv.description}
                   </p>
                 </div>
@@ -141,7 +150,7 @@ export function FleetSection() {
                 </div>
               </div>
             ))}
-          </div>
+          </HorizontalCarousel>
         </div>
       </div>
     </section>

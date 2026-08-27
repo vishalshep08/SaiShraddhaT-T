@@ -20,7 +20,7 @@ export const metadata = constructMetadata({
 
 export default function HomePage() {
   return (
-    <div className="space-y-16 sm:space-y-24 pb-16">
+    <div className="space-y-10 sm:space-y-16 lg:space-y-20 pb-12 sm:pb-16">
       {/* 1. Hero Section */}
       <HeroSection />
 

@@ -5,11 +5,12 @@ import { POPULAR_DESTINATIONS } from "@/lib/constants";
 import { buildWhatsAppLink, formatINR } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 export function DestinationsSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-stone-200/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 border-b border-stone-200/80 pb-4">
         <div>
           <Badge variant="maroon" size="sm" className="mb-2">
             Popular Outstation & Pilgrimage Routes
@@ -17,7 +18,7 @@ export function DestinationsSection() {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
             Direct Cab Routes From Shirdi
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
             Clean air-conditioned Ertiga & Tavera cabs with experienced highway drivers and transparent starting rates.
           </p>
         </div>
@@ -29,11 +30,17 @@ export function DestinationsSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <HorizontalCarousel
+        ariaLabel="Popular Outstation and Pilgrimage Destinations from Shirdi"
+        autoplay={true}
+        autoplayInterval={4500}
+        desktopMode="grid"
+        desktopGridCols="md:grid-cols-2 lg:grid-cols-4"
+      >
         {POPULAR_DESTINATIONS.map((dest) => (
           <div
             key={dest.slug}
-            className="rounded-xl bg-white border border-stone-200/90 p-5 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-4"
+            className="h-full rounded-xl bg-white border border-stone-200/90 p-5 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-4"
           >
             <div className="space-y-2.5">
               <div className="flex items-start justify-between gap-2">
@@ -91,7 +98,7 @@ export function DestinationsSection() {
             </div>
           </div>
         ))}
-      </div>
+      </HorizontalCarousel>
 
       <div className="mt-4 text-center text-xs text-stone-500">
         *Starting fares indicative for one-way/roundtrip Ertiga & Sedan cabs. Toll and parking extra as applicable.

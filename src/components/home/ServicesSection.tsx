@@ -5,6 +5,7 @@ import { CORE_SERVICES } from "@/lib/constants";
 import { buildWhatsAppLink } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 const iconMap: Record<string, React.ElementType> = {
   Car,
@@ -18,7 +19,7 @@ const iconMap: Record<string, React.ElementType> = {
 export function ServicesSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-stone-200/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 border-b border-stone-200/80 pb-4">
         <div>
           <Badge variant="saffron" size="sm" className="mb-2">
             Complete Travel Solutions
@@ -26,7 +27,7 @@ export function ServicesSection() {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
             Travel & Taxi Services From Shirdi
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
             From local Shirdi temple pickups to long-distance Maharashtra outstation routes and group travel.
           </p>
         </div>
@@ -38,13 +39,17 @@ export function ServicesSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <HorizontalCarousel
+        ariaLabel="Shirdi Travel & Taxi Services"
+        desktopMode="grid"
+        desktopGridCols="md:grid-cols-2 lg:grid-cols-3"
+      >
         {CORE_SERVICES.map((service, idx) => {
           const Icon = iconMap[service.icon] || Car;
           return (
             <div
               key={service.slug}
-              className="rounded-xl bg-white border border-stone-200/90 p-6 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-5"
+              className="h-full rounded-xl bg-white border border-stone-200/90 p-5 sm:p-6 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-4"
             >
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between">
@@ -57,7 +62,7 @@ export function ServicesSection() {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-bold text-brand-charcoal-900 leading-snug">
+                  <h3 className="text-base sm:text-lg font-bold text-brand-charcoal-900 leading-snug">
                     {service.title}
                   </h3>
                   <p className="text-xs text-stone-600 mt-1.5 leading-relaxed">
@@ -83,7 +88,7 @@ export function ServicesSection() {
                   className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 inline-flex items-center gap-1.5 hover:underline"
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Enquire on WhatsApp</span>
+                  <span>WhatsApp Enquire</span>
                 </a>
 
                 <Link
@@ -96,7 +101,7 @@ export function ServicesSection() {
             </div>
           );
         })}
-      </div>
+      </HorizontalCarousel>
     </section>
   );
 }

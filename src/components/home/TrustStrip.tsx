@@ -12,11 +12,11 @@ export function TrustStrip() {
     {
       icon: MapPin,
       title: "Sai Ashram, Shirdi Office",
-      subtitle: "Local on-ground presence at Bhakta Niwas",
+      subtitle: "Local on-ground desk at Bhakta Niwas",
     },
     {
       icon: Car,
-      title: "Owned Fleet (3 Ertiga + 1 Tavera)",
+      title: "Owned Fleet (Ertiga & Tavera)",
       subtitle: "Maintained, air-conditioned & sanitized",
     },
     {
@@ -28,22 +28,22 @@ export function TrustStrip() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {trustItems.map((item, idx) => {
           const Icon = item.icon;
           return (
             <div
               key={idx}
-              className="p-5 rounded-lg bg-white border border-stone-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex items-start gap-3.5"
+              className="p-3.5 sm:p-5 rounded-xl bg-white border border-stone-200/90 shadow-xs flex items-start gap-3 hover:border-brand-maroon/30 transition-colors"
             >
-              <div className="w-10 h-10 rounded-md bg-brand-maroon-50 text-brand-maroon flex items-center justify-center shrink-0 mt-0.5 border border-brand-maroon-100">
-                <Icon className="w-5 h-5" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-brand-maroon-50 text-brand-maroon flex items-center justify-center shrink-0 mt-0.5 border border-brand-maroon-100">
+                <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <div className="space-y-0.5">
-                <h3 className="text-sm font-bold text-brand-charcoal-900 leading-tight">
+              <div className="space-y-0.5 min-w-0">
+                <h3 className="text-xs sm:text-sm font-bold text-brand-charcoal-900 leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-xs text-stone-500 leading-normal">
+                <p className="text-[11px] sm:text-xs text-stone-500 leading-tight">
                   {item.subtitle}
                 </p>
               </div>

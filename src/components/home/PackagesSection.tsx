@@ -5,11 +5,12 @@ import { PILGRIMAGE_PACKAGES } from "@/lib/constants";
 import { buildWhatsAppLink, formatINR } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
 export function PackagesSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-stone-200/80 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 border-b border-stone-200/80 pb-4">
         <div>
           <Badge variant="saffron" size="sm" className="mb-2">
             Spiritual Darshan & Tour Packages
@@ -17,7 +18,7 @@ export function PackagesSection() {
           <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
             Pilgrimage Tour Packages
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-1 max-w-2xl">
+          <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
             Established holy darshan circuits refined over a decade. Comfortable family pacing, darshan coordination, and clean AC vehicles.
           </p>
         </div>
@@ -29,11 +30,15 @@ export function PackagesSection() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <HorizontalCarousel
+        ariaLabel="Pilgrimage Tour Packages from Shirdi"
+        desktopMode="grid"
+        desktopGridCols="md:grid-cols-3"
+      >
         {PILGRIMAGE_PACKAGES.slice(0, 3).map((pkg) => (
           <div
             key={pkg.id}
-            className="rounded-xl bg-white border border-stone-200/90 p-6 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-5"
+            className="h-full rounded-xl bg-white border border-stone-200/90 p-5 sm:p-6 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-4"
           >
             <div className="space-y-3.5">
               <div className="flex items-center justify-between">
@@ -47,7 +52,7 @@ export function PackagesSection() {
               </div>
 
               <div>
-                <h3 className="text-lg font-bold text-brand-charcoal-900 leading-snug">
+                <h3 className="text-base sm:text-lg font-bold text-brand-charcoal-900 leading-snug">
                   {pkg.title}
                 </h3>
                 <p className="text-xs text-stone-500 font-medium mt-1">
@@ -98,10 +103,10 @@ export function PackagesSection() {
             </div>
           </div>
         ))}
-      </div>
+      </HorizontalCarousel>
 
       {/* Special Multi-day / Jyotirlinga Banner */}
-      <div className="mt-8 rounded-xl bg-brand-ivory-200/80 p-6 border border-stone-300/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="mt-8 rounded-xl bg-brand-ivory-200/80 p-5 sm:p-6 border border-stone-300/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-brand-maroon uppercase tracking-wider bg-brand-maroon-50 px-2 py-0.5 rounded border border-brand-maroon-200">
@@ -109,7 +114,7 @@ export function PackagesSection() {
             </span>
             <span className="text-xs text-stone-500 font-semibold">• 5 Maharashtra Jyotirlingas</span>
           </div>
-          <h4 className="text-base font-bold text-brand-charcoal-900">
+          <h4 className="text-sm sm:text-base font-bold text-brand-charcoal-900">
             Trimbakeshwar • Grishneshwar • Bhimashankar • Aundha Nagnath • Parli Vaijnath
           </h4>
           <p className="text-xs text-stone-600">

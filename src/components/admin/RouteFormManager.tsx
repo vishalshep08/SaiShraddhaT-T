@@ -68,7 +68,8 @@ export function RouteFormManager({ initialData }: RouteFormManagerProps) {
       if (res.success) {
         setMessage({ type: "success", text: "Route saved and published successfully." });
         router.refresh();
-        if (initialData.id === "new" && res.id) {
+        if (res.id && (initialData.id === "new" || initialData.id?.startsWith("static-"))) {
+          setFormData((prev) => ({ ...prev, id: res.id }));
           router.push(`/admin/routes/${res.id}`);
         }
       } else {

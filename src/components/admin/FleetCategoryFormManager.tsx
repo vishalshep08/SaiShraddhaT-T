@@ -54,7 +54,8 @@ export function FleetCategoryFormManager({ initialData }: FleetCategoryFormManag
       if (res.success) {
         setMessage({ type: "success", text: "Vehicle category saved and published successfully." });
         router.refresh();
-        if (initialData.id === "new" && res.id) {
+        if (res.id && (initialData.id === "new" || initialData.id?.startsWith("static-"))) {
+          setFormData((prev) => ({ ...prev, id: res.id }));
           router.push(`/admin/fleet/${res.id}`);
         }
       } else {

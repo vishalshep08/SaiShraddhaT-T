@@ -66,7 +66,8 @@ export function DestinationFormManager({ initialData }: DestinationFormManagerPr
       if (res.success) {
         setMessage({ type: "success", text: "Destination saved and published successfully." });
         router.refresh();
-        if (initialData.id === "new" && res.id) {
+        if (res.id && (initialData.id === "new" || initialData.id?.startsWith("static-"))) {
+          setFormData((prev) => ({ ...prev, id: res.id }));
           router.push(`/admin/destinations/${res.id}`);
         }
       } else {

@@ -12,6 +12,18 @@ import {
 } from "@/types/cms";
 import { revalidatePath } from "next/cache";
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export async function isUUID(id?: string | null): Promise<boolean> {
+  if (!id) return false;
+  return UUID_REGEX.test(id);
+}
+
+function checkUUID(id?: string | null): boolean {
+  if (!id) return false;
+  return UUID_REGEX.test(id);
+}
+
 // -----------------------------------------------------------------------------
 // SERVICES CMS ACTIONS
 // -----------------------------------------------------------------------------
@@ -56,6 +68,8 @@ export async function getCMSServiceByIdAction(
   id: string
 ): Promise<CMSServiceItem | null> {
   try {
+    if (!id || !checkUUID(id)) return null;
+
     const supabase = createSupabaseServerClient();
     if (!supabase) return null;
 
@@ -119,25 +133,41 @@ export async function saveCMSServiceAction(service: Partial<CMSServiceItem>): Pr
       updated_at: new Date().toISOString(),
     };
 
-    if (service.id && service.id !== "new") {
+    let targetId = service.id;
+
+    if (targetId && checkUUID(targetId)) {
       const { error } = await (supabase.from("services") as any)
         .update(payload)
-        .eq("id", service.id);
+        .eq("id", targetId);
       if (error) throw error;
     } else {
-      const { data, error } = await (supabase.from("services") as any)
-        .insert([payload])
+      // Check if existing record exists with this slug
+      const { data: existing } = await (supabase.from("services") as any)
         .select("id")
-        .single();
-      if (error) throw error;
-      service.id = data.id;
+        .eq("slug", payload.slug)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await (supabase.from("services") as any)
+          .update(payload)
+          .eq("id", existing.id);
+        if (error) throw error;
+        targetId = existing.id;
+      } else {
+        const { data, error } = await (supabase.from("services") as any)
+          .insert([payload])
+          .select("id")
+          .single();
+        if (error) throw error;
+        targetId = data.id;
+      }
     }
 
     revalidatePath("/services");
     revalidatePath("/admin/services");
     if (service.slug) revalidatePath(`/services/${service.slug}`);
 
-    return { success: true, id: service.id };
+    return { success: true, id: targetId };
   } catch (err: any) {
     console.error("[Save Service Error]:", err);
     return { success: false, error: err.message || "Failed to save service." };
@@ -191,6 +221,8 @@ export async function getCMSDestinationByIdAction(
   id: string
 ): Promise<CMSDestinationItem | null> {
   try {
+    if (!id || !checkUUID(id)) return null;
+
     const supabase = createSupabaseServerClient();
     if (!supabase) return null;
 
@@ -260,25 +292,40 @@ export async function saveCMSDestinationAction(dest: Partial<CMSDestinationItem>
       updated_at: new Date().toISOString(),
     };
 
-    if (dest.id && dest.id !== "new") {
+    let targetId = dest.id;
+
+    if (targetId && checkUUID(targetId)) {
       const { error } = await (supabase.from("destinations") as any)
         .update(payload)
-        .eq("id", dest.id);
+        .eq("id", targetId);
       if (error) throw error;
     } else {
-      const { data, error } = await (supabase.from("destinations") as any)
-        .insert([payload])
+      const { data: existing } = await (supabase.from("destinations") as any)
         .select("id")
-        .single();
-      if (error) throw error;
-      dest.id = data.id;
+        .eq("slug", payload.slug)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await (supabase.from("destinations") as any)
+          .update(payload)
+          .eq("id", existing.id);
+        if (error) throw error;
+        targetId = existing.id;
+      } else {
+        const { data, error } = await (supabase.from("destinations") as any)
+          .insert([payload])
+          .select("id")
+          .single();
+        if (error) throw error;
+        targetId = data.id;
+      }
     }
 
     revalidatePath("/destinations");
     revalidatePath("/admin/destinations");
     if (dest.slug) revalidatePath(`/destinations/${dest.slug}`);
 
-    return { success: true, id: dest.id };
+    return { success: true, id: targetId };
   } catch (err: any) {
     console.error("[Save Destination Error]:", err);
     return { success: false, error: err.message || "Failed to save destination." };
@@ -333,6 +380,8 @@ export async function getCMSRoutesAction(): Promise<CMSRouteItem[]> {
 
 export async function getCMSRouteByIdAction(id: string): Promise<CMSRouteItem | null> {
   try {
+    if (!id || !checkUUID(id)) return null;
+
     const supabase = createSupabaseServerClient();
     if (!supabase) return null;
 
@@ -408,25 +457,40 @@ export async function saveCMSRouteAction(route: Partial<CMSRouteItem>): Promise<
       updated_at: new Date().toISOString(),
     };
 
-    if (route.id && route.id !== "new") {
+    let targetId = route.id;
+
+    if (targetId && checkUUID(targetId)) {
       const { error } = await (supabase.from("routes") as any)
         .update(payload)
-        .eq("id", route.id);
+        .eq("id", targetId);
       if (error) throw error;
     } else {
-      const { data, error } = await (supabase.from("routes") as any)
-        .insert([payload])
+      const { data: existing } = await (supabase.from("routes") as any)
         .select("id")
-        .single();
-      if (error) throw error;
-      route.id = data.id;
+        .eq("slug", payload.slug)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await (supabase.from("routes") as any)
+          .update(payload)
+          .eq("id", existing.id);
+        if (error) throw error;
+        targetId = existing.id;
+      } else {
+        const { data, error } = await (supabase.from("routes") as any)
+          .insert([payload])
+          .select("id")
+          .single();
+        if (error) throw error;
+        targetId = data.id;
+      }
     }
 
     revalidatePath("/routes");
     revalidatePath("/admin/routes");
     if (route.slug) revalidatePath(`/routes/${route.slug}`);
 
-    return { success: true, id: route.id };
+    return { success: true, id: targetId };
   } catch (err: any) {
     console.error("[Save Route Error]:", err);
     return { success: false, error: err.message || "Failed to save route." };
@@ -480,6 +544,8 @@ export async function getCMSToursAction(): Promise<CMSTourPackageItem[]> {
 
 export async function getCMSTourByIdAction(id: string): Promise<CMSTourPackageItem | null> {
   try {
+    if (!id || !checkUUID(id)) return null;
+
     const supabase = createSupabaseServerClient();
     if (!supabase) return null;
 
@@ -553,18 +619,33 @@ export async function saveCMSTourAction(tour: Partial<CMSTourPackageItem>): Prom
       updated_at: new Date().toISOString(),
     };
 
-    if (tour.id && tour.id !== "new") {
+    let targetId = tour.id;
+
+    if (targetId && checkUUID(targetId)) {
       const { error } = await (supabase.from("packages") as any)
         .update(payload)
-        .eq("id", tour.id);
+        .eq("id", targetId);
       if (error) throw error;
     } else {
-      const { data, error } = await (supabase.from("packages") as any)
-        .insert([payload])
+      const { data: existing } = await (supabase.from("packages") as any)
         .select("id")
-        .single();
-      if (error) throw error;
-      tour.id = data.id;
+        .eq("slug", payload.slug)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await (supabase.from("packages") as any)
+          .update(payload)
+          .eq("id", existing.id);
+        if (error) throw error;
+        targetId = existing.id;
+      } else {
+        const { data, error } = await (supabase.from("packages") as any)
+          .insert([payload])
+          .select("id")
+          .single();
+        if (error) throw error;
+        targetId = data.id;
+      }
     }
 
     revalidatePath("/packages");
@@ -575,7 +656,7 @@ export async function saveCMSTourAction(tour: Partial<CMSTourPackageItem>): Prom
       revalidatePath(`/tours/${tour.slug}`);
     }
 
-    return { success: true, id: tour.id };
+    return { success: true, id: targetId };
   } catch (err: any) {
     console.error("[Save Tour Error]:", err);
     return { success: false, error: err.message || "Failed to save tour package." };
@@ -684,24 +765,39 @@ export async function saveCMSVehicleCategoryAction(cat: Partial<CMSVehicleCatego
       display_order: Number(cat.displayOrder) || 0,
     };
 
-    if (cat.id && cat.id !== "new") {
+    let targetId = cat.id;
+
+    if (targetId && checkUUID(targetId)) {
       const { error } = await (supabase.from("vehicle_categories") as any)
         .update(payload)
-        .eq("id", cat.id);
+        .eq("id", targetId);
       if (error) throw error;
     } else {
-      const { data, error } = await (supabase.from("vehicle_categories") as any)
-        .insert([payload])
+      const { data: existing } = await (supabase.from("vehicle_categories") as any)
         .select("id")
-        .single();
-      if (error) throw error;
-      cat.id = data.id;
+        .eq("slug", payload.slug)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error } = await (supabase.from("vehicle_categories") as any)
+          .update(payload)
+          .eq("id", existing.id);
+        if (error) throw error;
+        targetId = existing.id;
+      } else {
+        const { data, error } = await (supabase.from("vehicle_categories") as any)
+          .insert([payload])
+          .select("id")
+          .single();
+        if (error) throw error;
+        targetId = data.id;
+      }
     }
 
     revalidatePath("/fleet");
     revalidatePath("/admin/fleet");
 
-    return { success: true, id: cat.id };
+    return { success: true, id: targetId };
   } catch (err: any) {
     console.error("[Save Category Error]:", err);
     return { success: false, error: err.message || "Failed to save category." };

@@ -1,19 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Image from "next/image";
 import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
-  Users,
   MessageSquare,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { HeroVehicleShowcaseItem } from "@/actions/fleetActions";
 import { buildWhatsAppLink } from "@/lib/utils";
-import { Badge } from "@/components/ui/Badge";
+import { useEnquiryModal } from "@/context/EnquiryModalContext";
 
 interface HeroFleetShowcaseProps {
   vehicles: HeroVehicleShowcaseItem[];
@@ -25,10 +22,22 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>({});
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
+  const { openEnquiryModal } = useEnquiryModal();
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const total = vehicles.length;
+
+  // Check reduced motion
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handleChange = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
 
   const nextSlide = useCallback(() => {
     if (total === 0) return;
@@ -40,18 +49,18 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
 
-  // Automatic slow looping (4.5 seconds per slide)
+  // Automatic slow looping (5.5s) - pauses on interaction or reduced motion
   useEffect(() => {
-    if (isPaused || total <= 1) return;
+    if (isPaused || prefersReducedMotion || total <= 1) return;
 
     timerRef.current = setInterval(() => {
       nextSlide();
-    }, 4500);
+    }, 5500);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPaused, total, nextSlide]);
+  }, [isPaused, prefersReducedMotion, total, nextSlide]);
 
   // Touch Swipe Handlers for mobile
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -70,7 +79,7 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
       return;
     }
     const distance = touchStart - touchEnd;
-    const minSwipeDistance = 45;
+    const minSwipeDistance = 40;
 
     if (distance > minSwipeDistance) {
       nextSlide();
@@ -80,7 +89,6 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
     setIsPaused(false);
   };
 
-  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowLeft") {
       prevSlide();
@@ -107,7 +115,7 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
 
   return (
     <div
-      className="relative w-full focus:outline-none"
+      className="relative w-full focus:outline-none select-none"
       tabIndex={0}
       onKeyDown={handleKeyDown}
       onMouseEnter={() => setIsPaused(true)}
@@ -119,21 +127,19 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
       role="region"
     >
       {/* Showcase Outer Card */}
-      <div className="bg-white/95 backdrop-blur-xs rounded-3xl p-5 sm:p-6 border border-stone-200/90 shadow-lg shadow-stone-200/50 relative overflow-hidden flex flex-col justify-between transition-all duration-300">
-        {/* Top Header Strip: Fleet badge & Slide Counter */}
-        <div className="flex items-center justify-between gap-2 mb-3">
-          <div className="flex items-center gap-2">
-            <span
-              className={`text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 ${
-                isOwned
-                  ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                  : "bg-amber-50 text-amber-800 border border-amber-200"
-              }`}
-            >
-              {isOwned && <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />}
-              <span>{isOwned ? "Directly Owned Fleet" : "Available On Request"}</span>
-            </span>
-          </div>
+      <div className="bg-white/95 backdrop-blur-xs rounded-2xl p-4 sm:p-5 border border-stone-200 shadow-md shadow-stone-200/40 relative overflow-hidden flex flex-col justify-between">
+        {/* Top Header Strip */}
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <span
+            className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1.5 ${
+              isOwned
+                ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                : "bg-stone-100 text-stone-700 border border-stone-200"
+            }`}
+          >
+            {isOwned && <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />}
+            <span>{isOwned ? "Owned Fleet" : "Verified Partner Network"}</span>
+          </span>
 
           <div className="flex items-center gap-1 text-[11px] font-semibold text-stone-400">
             <span>{currentIndex + 1}</span>
@@ -142,18 +148,18 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
           </div>
         </div>
 
-        {/* Dynamic Vehicle Image Container with Smooth Fade */}
-        <div className="relative w-full h-48 sm:h-64 rounded-2xl bg-stone-50/80 border border-stone-100 overflow-hidden flex items-center justify-center p-2 group">
+        {/* Dynamic Vehicle Image Container */}
+        <div className="relative w-full h-44 sm:h-56 rounded-xl bg-stone-50/80 border border-stone-100 overflow-hidden flex items-center justify-center p-2 group">
           <img
             key={currentVehicle.id}
             src={imageSrc}
             alt={currentVehicle.altText}
             onError={() => handleImageError(currentVehicle.id)}
-            className="w-full h-full object-contain rounded-xl transition-all duration-500 transform group-hover:scale-[1.02]"
+            className="w-full h-full object-contain rounded-lg transition-transform duration-300 group-hover:scale-[1.02]"
             loading={currentIndex === 0 ? "eager" : "lazy"}
           />
 
-          {/* Quick Prev / Next Controls on Image Hover */}
+          {/* Quick Prev / Next Controls */}
           {total > 1 && (
             <>
               <button
@@ -163,7 +169,7 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
                   prevSlide();
                 }}
                 aria-label="Previous vehicle"
-                className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow-md border border-stone-200 text-stone-700 flex items-center justify-center hover:bg-brand-maroon hover:text-white transition-all opacity-80 sm:opacity-0 group-hover:opacity-100"
+                className="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/90 shadow border border-stone-200 text-stone-700 flex items-center justify-center hover:bg-brand-maroon hover:text-white transition-all opacity-70 sm:opacity-0 group-hover:opacity-100"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -174,7 +180,7 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
                   nextSlide();
                 }}
                 aria-label="Next vehicle"
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 shadow-md border border-stone-200 text-stone-700 flex items-center justify-center hover:bg-brand-maroon hover:text-white transition-all opacity-80 sm:opacity-0 group-hover:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-white/90 shadow border border-stone-200 text-stone-700 flex items-center justify-center hover:bg-brand-maroon hover:text-white transition-all opacity-70 sm:opacity-0 group-hover:opacity-100"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -182,46 +188,48 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
           )}
         </div>
 
-        {/* Vehicle Information Details */}
-        <div className="pt-4 space-y-2">
+        {/* Short Concise Information (Per Section 7 requirements) */}
+        <div className="pt-3 space-y-2">
           <div className="flex items-baseline justify-between gap-2 flex-wrap">
-            <h2 className="text-base sm:text-lg font-black text-brand-charcoal-900 tracking-tight">
-              {currentVehicle.displayName}
-            </h2>
-            <span className="text-xs font-bold text-brand-maroon">
+            <p className="text-base sm:text-lg font-bold text-brand-charcoal-900 tracking-tight">
+              {currentVehicle.name}
+            </p>
+            <span className="text-xs font-semibold text-stone-500">
               {currentVehicle.categoryName}
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-stone-600">
-            <span className="flex items-center gap-1 font-semibold">
-              <Users className="w-3.5 h-3.5 text-brand-maroon shrink-0" />
-              <span>{currentVehicle.seatingCapacity} Seater</span>
+          <div className="flex items-center gap-2 text-xs text-stone-600 font-medium">
+            <span>{currentVehicle.seatingCapacity}+1 Seater</span>
+            <span className="text-stone-300">•</span>
+            <span>AC</span>
+            <span className="text-stone-300">•</span>
+            <span className={isOwned ? "text-emerald-700 font-semibold" : "text-stone-600"}>
+              {isOwned ? "Owned" : "On Request"}
             </span>
-            <span className="text-stone-300">•</span>
-            <span className="text-stone-500">Air Conditioned</span>
-            <span className="text-stone-300">•</span>
-            <span className="text-stone-500">Clean &amp; Sanitized</span>
           </div>
 
-          {currentVehicle.description && (
-            <p className="text-xs text-stone-500 line-clamp-2 leading-relaxed pt-0.5">
-              {currentVehicle.description}
-            </p>
-          )}
-
           {/* Action Row */}
-          <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-3">
-            <a
-              href={`#quick-enquiry`}
+          <div className="pt-2.5 border-t border-stone-100 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() =>
+                openEnquiryModal({
+                  vehicleCategorySlug: currentVehicle.name,
+                  sourcePage: "hero_fleet_showcase",
+                })
+              }
               className="text-xs font-bold text-brand-maroon hover:text-brand-maroon-800 flex items-center gap-1 transition-colors"
             >
               <span>Get Fare Quote</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </a>
+            </button>
 
             <a
-              href={buildWhatsAppLink({ vehicle: currentVehicle.name })}
+              href={buildWhatsAppLink({
+                vehicle: currentVehicle.name,
+                customMessage: `Hello Ramesh Shep, I would like to check availability for ${currentVehicle.name} from Shirdi.`,
+              })}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold hover:bg-emerald-100 transition-colors"
@@ -234,7 +242,7 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
 
         {/* Carousel Pagination Dots */}
         {total > 1 && (
-          <div className="pt-3 flex items-center justify-center gap-1.5">
+          <div className="pt-2.5 flex items-center justify-center gap-1.5">
             {vehicles.map((v, idx) => (
               <button
                 key={v.id}

@@ -1,138 +1,112 @@
 import React from "react";
 import Link from "next/link";
-import { Clock, MapPin, MessageSquare, ArrowRight, CheckCircle2 } from "lucide-react";
-import { PILGRIMAGE_PACKAGES } from "@/lib/constants";
-import { buildWhatsAppLink, formatINR } from "@/lib/utils";
+import { ArrowRight, Clock } from "lucide-react";
+import { formatINR } from "@/lib/utils";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { HorizontalCarousel } from "@/components/ui/HorizontalCarousel";
 
+interface CompactPackage {
+  name: string;
+  slug: string;
+  duration: string;
+  startingFare: number;
+  destinations: string;
+}
+
+const POPULAR_PACKAGES: CompactPackage[] = [
+  {
+    name: "Nashik & Trimbakeshwar",
+    slug: "/packages/nashik-trimbakeshwar-darshan",
+    duration: "1 Day",
+    startingFare: 2600,
+    destinations: "Trimbakeshwar • Panchavati • Muktidham",
+  },
+  {
+    name: "Ellora & Grishneshwar",
+    slug: "/packages/aurangabad-ellora-grishneshwar",
+    duration: "1 Day",
+    startingFare: 2800,
+    destinations: "Grishneshwar • Ellora Caves • Bhadra Maruti",
+  },
+  {
+    name: "Shani Shingnapur",
+    slug: "/packages/shani-shingnapur-day-tour",
+    duration: "Half Day",
+    startingFare: 1800,
+    destinations: "Shani Bhagwan Temple • Sugarcane Country",
+  },
+];
+
 export function PackagesSection() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-10 border-b border-stone-200/80 pb-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 border-b border-stone-200/80 pb-4">
         <div>
-          <Badge variant="saffron" size="sm" className="mb-2">
-            Spiritual Darshan & Tour Packages
+          <Badge variant="saffron" size="sm" className="mb-1.5">
+            Darshan Tours
           </Badge>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
-            Pilgrimage Tour Packages
+            Popular Pilgrimage Packages
           </h2>
-          <p className="text-xs sm:text-sm text-stone-600 mt-1 max-w-2xl">
-            Established holy darshan circuits refined over a decade. Comfortable family pacing, darshan coordination, and clean AC vehicles.
+          <p className="text-xs sm:text-sm text-stone-600 mt-1">
+            Carefully paced family darshan circuits with door-to-door cab coordination.
           </p>
         </div>
 
         <Link href="/packages" className="shrink-0">
           <Button variant="outline" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
-            All Tour Packages
+            View All Packages →
           </Button>
         </Link>
       </div>
 
+      {/* 3 Compact Cards */}
       <HorizontalCarousel
-        ariaLabel="Pilgrimage Tour Packages from Shirdi"
+        ariaLabel="Popular Pilgrimage Packages"
+        autoplay={false}
         desktopMode="grid"
         desktopGridCols="md:grid-cols-3"
       >
-        {PILGRIMAGE_PACKAGES.slice(0, 3).map((pkg) => (
+        {POPULAR_PACKAGES.map((pkg) => (
           <div
-            key={pkg.id}
-            className="h-full rounded-xl bg-white border border-stone-200/90 p-5 sm:p-6 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-4"
+            key={pkg.name}
+            className="h-full rounded-xl bg-white border border-stone-200/90 p-4 sm:p-5 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-3"
           >
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-maroon bg-brand-maroon-50 px-2.5 py-1 rounded">
-                  <Clock className="w-3.5 h-3.5" />
+            <div className="space-y-2">
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-maroon bg-brand-maroon-50 px-2 py-0.5 rounded">
+                  <Clock className="w-3 h-3" />
                   {pkg.duration}
                 </span>
-                <span className="text-xs font-bold text-stone-700">
-                  {pkg.startingFare ? `From ${formatINR(pkg.startingFare)}*` : "Custom Quote"}
+                <span className="text-xs font-bold text-brand-charcoal-900">
+                  From {formatINR(pkg.startingFare)}*
                 </span>
               </div>
 
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-brand-charcoal-900 leading-snug">
-                  {pkg.title}
+                <h3 className="text-base font-bold text-brand-charcoal-900 leading-snug">
+                  {pkg.name}
                 </h3>
                 <p className="text-xs text-stone-500 font-medium mt-1">
-                  {pkg.destinationsSummary}
+                  {pkg.destinations}
                 </p>
-              </div>
-
-              <p className="text-xs text-stone-600 leading-relaxed">
-                {pkg.shortDescription}
-              </p>
-
-              <div className="pt-2 border-t border-stone-100 space-y-1.5">
-                <span className="text-[11px] font-bold text-stone-600 uppercase tracking-wider block">
-                  Places Covered:
-                </span>
-                <div className="space-y-1">
-                  {pkg.placesCovered.slice(0, 4).map((p, i) => (
-                    <div key={i} className="flex items-start gap-1.5 text-xs text-stone-700">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-brand-maroon shrink-0 mt-0.5" />
-                      <span className="truncate">{p}</span>
-                    </div>
-                  ))}
-                  {pkg.placesCovered.length > 4 && (
-                    <span className="text-[11px] text-stone-400 pl-5">
-                      + {pkg.placesCovered.length - 4} more holy locations
-                    </span>
-                  )}
-                </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
-              <a
-                href={buildWhatsAppLink({ drop: pkg.title })}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full"
+            <div className="pt-2.5 border-t border-stone-100 flex items-center justify-between">
+              <Link
+                href={pkg.slug}
+                className="text-xs font-bold text-brand-maroon hover:text-brand-maroon-800 flex items-center gap-1 hover:underline"
               >
-                <Button
-                  size="sm"
-                  variant="primary"
-                  className="w-full"
-                  leftIcon={<MessageSquare className="w-4 h-4" />}
-                >
-                  Customise & Book
-                </Button>
-              </a>
+                <span>View Package</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         ))}
       </HorizontalCarousel>
-
-      {/* Special Multi-day / Jyotirlinga Banner */}
-      <div className="mt-8 rounded-xl bg-brand-ivory-200/80 p-5 sm:p-6 border border-stone-300/80 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-brand-maroon uppercase tracking-wider bg-brand-maroon-50 px-2 py-0.5 rounded border border-brand-maroon-200">
-              Custom Pilgrimage Circuit
-            </span>
-            <span className="text-xs text-stone-500 font-semibold">• 5 Maharashtra Jyotirlingas</span>
-          </div>
-          <h4 className="text-sm sm:text-base font-bold text-brand-charcoal-900">
-            Trimbakeshwar • Grishneshwar • Bhimashankar • Aundha Nagnath • Parli Vaijnath
-          </h4>
-          <p className="text-xs text-stone-600">
-            Planning a custom multi-day yatra for your family or sangh? Speak with Ramesh Shep (Owner) for a tailor-made day-by-day itinerary.
-          </p>
-        </div>
-
-        <a
-          href={buildWhatsAppLink({ drop: "5 Maharashtra Jyotirlinga Custom Circuit" })}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0"
-        >
-          <Button size="sm" variant="outline" className="border-brand-maroon text-brand-maroon hover:bg-brand-maroon hover:text-white">
-            Plan Custom Yatra
-          </Button>
-        </a>
-      </div>
     </section>
   );
 }

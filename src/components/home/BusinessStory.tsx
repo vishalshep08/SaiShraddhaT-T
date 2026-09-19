@@ -1,64 +1,62 @@
 import React from "react";
-import { ShieldCheck, MapPin, Heart } from "lucide-react";
 import { BUSINESS_CONFIG } from "@/lib/constants";
-import { Badge } from "@/components/ui/Badge";
+import { buildWhatsAppLink } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
+import { QuoteCTAButton } from "./QuoteCTAButton";
+import { MessageSquare } from "lucide-react";
 
 export function BusinessStory() {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="bg-white rounded-2xl p-8 sm:p-12 border border-stone-200 shadow-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Story Text */}
-          <div className="lg:col-span-8 space-y-4">
-            <Badge variant="saffron" size="sm">
-              Our Journey Since {BUSINESS_CONFIG.establishedYear}
-            </Badge>
+      <div className="relative rounded-2xl bg-gradient-to-r from-brand-maroon via-brand-maroon-800 to-brand-maroon-900 text-white p-6 sm:p-10 lg:p-12 overflow-hidden shadow-md border border-brand-maroon-700">
+        {/* Subtle Sacred Graphic Background Watermark */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-10 w-64 h-64 sm:w-80 sm:h-80 opacity-10 pointer-events-none select-none">
+          <img
+            src="/images/shirdi/sai-baba-emblem.svg"
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-contain"
+          />
+        </div>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-charcoal-900 tracking-tight">
-              Founded &amp; Managed with Care in Shirdi
-            </h2>
-
-            <div className="text-sm text-stone-700 space-y-3 leading-relaxed">
-              <p>
-                In <strong>2014</strong>, <strong>Sai Shraddha Tours &amp; Travels</strong> was established right outside the holy shrine of Shirdi, operating from <em>Sai Ashram (Bhakta Niwas 1000 Rooms)</em>. Founded and managed by <strong>Ramesh Shep</strong>, the business was built on personal conversations, genuine hospitality, and deep devotion to visiting yatris.
-              </p>
-              <p>
-                Ramesh Shep personally assists families arriving by train, flight, or bus—understanding their pilgrimage darshan timings and arranging clean, comfortable cabs for local temple visits, Shani Shingnapur, Trimbakeshwar Jyotirlinga, Grishneshwar, and highway outstation travel.
-              </p>
-              <p className="font-medium text-brand-charcoal-900">
-                Today, our core promise remains genuine: you speak directly with the owner, receive honest transparent pricing without middleman fees, and travel in well-maintained owned Ertiga and Tavera vehicles.
-              </p>
-            </div>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-maroon-700/80 text-brand-saffron-300 text-xs font-semibold border border-brand-maroon-600">
+            <span>Sai Ashram (Bhakta Niwas), Shirdi</span>
           </div>
 
-          {/* Highlight Visual Card */}
-          <div className="lg:col-span-4 bg-brand-ivory-200/90 rounded-2xl p-6 border border-stone-300 space-y-4 text-center">
-            <div className="w-16 h-16 rounded-2xl overflow-hidden mx-auto shadow-xs border border-brand-maroon/20">
-              <img
-                src="/images/shirdi/sai-baba-emblem.svg"
-                alt="Sai Baba Sacred Shirdi Emblem"
-                className="w-full h-full object-cover"
-              />
-            </div>
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight leading-tight">
+            Your Journey Begins in Shirdi
+          </h2>
 
-            <div>
-              <h3 className="font-extrabold text-base text-brand-charcoal-900 uppercase">
-                {BUSINESS_CONFIG.name}
-              </h3>
-              <p className="text-xs text-brand-maroon font-semibold">
-                Owner: Ramesh Shep
-              </p>
-            </div>
+          <p className="text-sm sm:text-base text-brand-maroon-100 leading-relaxed">
+            From Sai Baba darshan to Maharashtra pilgrimage circuits and outstation travel, we help you travel comfortably from Shirdi.
+          </p>
 
-            <div className="pt-2 border-t border-stone-300/80 text-xs text-stone-600 space-y-1">
-              <div>📍 <strong>Location:</strong> {BUSINESS_CONFIG.officeLocationName}</div>
-              <div>📅 <strong>Established:</strong> {BUSINESS_CONFIG.establishedYear}</div>
-              <div>🚗 <strong>Owned Fleet:</strong> 3 × Ertiga, 1 × Tavera</div>
-            </div>
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <QuoteCTAButton
+              label="Plan Your Journey"
+              size="md"
+              variant="saffron"
+              className="bg-brand-saffron hover:bg-brand-saffron-600 text-brand-charcoal-900 font-bold"
+              sourcePage="shirdi_visual_section"
+            />
 
-            <div className="pt-2 text-[11px] text-stone-500 italic">
-              "॥ ॐ साईं राम ॥ Dedicated to honest pilgrimage journeys."
-            </div>
+            <a
+              href={buildWhatsAppLink({
+                customMessage: `Hello Ramesh Shep, I am planning a pilgrimage journey from Shirdi and need cab assistance.`,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button
+                size="md"
+                variant="outline"
+                className="border-brand-maroon-400 text-white hover:bg-brand-maroon-700 font-semibold"
+                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-300" />}
+              >
+                WhatsApp Ramesh
+              </Button>
+            </a>
           </div>
         </div>
       </div>

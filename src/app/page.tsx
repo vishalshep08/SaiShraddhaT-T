@@ -1,9 +1,7 @@
 import React from "react";
 import { HeroSection } from "@/components/home/HeroSection";
-import { QuickEnquiry } from "@/components/home/QuickEnquiry";
-import { TrustStrip } from "@/components/home/TrustStrip";
-import { ServicesSection } from "@/components/home/ServicesSection";
 import { DestinationsSection } from "@/components/home/DestinationsSection";
+import { ServicesSection } from "@/components/home/ServicesSection";
 import { PackagesSection } from "@/components/home/PackagesSection";
 import { FleetSection } from "@/components/home/FleetSection";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
@@ -13,45 +11,40 @@ import { FinalCTA } from "@/components/home/FinalCTA";
 import { constructMetadata } from "@/lib/seo";
 
 export const metadata = constructMetadata({
-  title: "Shirdi Taxi & Pilgrimage Travel Services",
-  description: "Sai Shraddha Tours & Travels — Shirdi's trusted taxi, pilgrimage and outstation cab service operating since 2014 from Sai Ashram. Owned Ertiga & Tavera fleet, Nashik, Shani Shingnapur, and Ellora darshan tours.",
+  title: "Shirdi Taxi & Cab Service | Sai Shraddha Tours & Travels",
+  description:
+    "Sai Shraddha Tours & Travels — Shirdi's trusted taxi, pilgrimage and outstation cab service operating since 2014 from Sai Ashram. Owned Ertiga & Tavera fleet, Nashik, Shani Shingnapur, and Ellora darshan tours.",
   canonicalPath: "/",
 });
 
 export default function HomePage() {
   return (
-    <div className="space-y-10 sm:space-y-16 lg:space-y-20 pb-12 sm:pb-16">
-      {/* 1. Hero Section */}
+    <div className="space-y-10 sm:space-y-14 lg:space-y-16 pb-12 sm:pb-16">
+      {/* 1. Hero Section (Headline, 3 Trust Points, Primary/Secondary CTAs, Dynamic Fleet Showcase) */}
       <HeroSection />
 
-      {/* 2. Quick Enquiry Form Anchor */}
-      <QuickEnquiry />
-
-      {/* 3. Understated Trust Strip */}
-      <TrustStrip />
-
-      {/* 4. Core Travel Services */}
-      <ServicesSection />
-
-      {/* 5. Popular Outstation & Pilgrimage Destinations */}
+      {/* 2. Where Do You Want To Go? (6 Popular Routes Preview) */}
       <DestinationsSection />
 
-      {/* 6. Historical & Curated Pilgrimage Packages */}
+      {/* 3. Travel Services From Shirdi (4 Concise Service Categories) */}
+      <ServicesSection />
+
+      {/* 4. Popular Pilgrimage Packages (3 Compact Tour Cards) */}
       <PackagesSection />
 
-      {/* 7. Fleet Transparency: Owned vs On-Request */}
+      {/* 5. Our Owned Vehicles (Ertiga & Tavera Highlight + Verified Partner Network Note) */}
       <FleetSection />
 
-      {/* 8. Why Choose Us */}
+      {/* 6. Why Travel With Sai Shraddha? (4 Concise Trust Points) */}
       <WhyChooseUs />
 
-      {/* 9. Legacy & Modern Business Story (Since 2014) */}
+      {/* 7. Your Journey Begins in Shirdi (Tasteful Sai Baba / Shirdi Visual Section) */}
       <BusinessStory />
 
-      {/* 10. Traveller Reviews & Verified Feedback Architecture */}
+      {/* 8. Real Customer Reviews (Dynamic from Supabase; zero fake reviews) */}
       <ReviewsSection />
 
-      {/* 11. Final Conversion CTA */}
+      {/* 9. Final Conversion CTA (Planning a Trip From Shirdi?) */}
       <FinalCTA />
     </div>
   );

@@ -100,38 +100,31 @@ export function Header({ logoUrl }: HeaderProps) {
               href={buildWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors border border-emerald-200 shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-semibold hover:bg-emerald-100 transition-colors border border-emerald-200 shadow-xs"
             >
               <MessageSquare className="w-4 h-4 text-emerald-600" />
-              <span>Chat on WhatsApp</span>
+              <span>WhatsApp Direct</span>
             </a>
 
             <Link
               href="/get-quote"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-brand-maroon text-white text-xs font-bold hover:bg-brand-maroon-800 transition-colors shadow-xs"
             >
-              <span>Get Cab Quote</span>
+              <span>Get a Quote</span>
             </Link>
           </div>
 
-          {/* Mobile Quick Action Buttons & Menu Trigger */}
+          {/* Mobile Action & Menu Trigger: Clean & Uncluttered */}
           <div className="flex items-center gap-2 lg:hidden">
             <a
               href={buildWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200"
+              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold"
               aria-label="Chat on WhatsApp"
             >
               <MessageSquare className="w-4 h-4 text-emerald-600" />
-            </a>
-
-            <a
-              href={buildPhoneLink(rameshContact.primaryPhoneRaw)}
-              className="p-2 rounded-md bg-brand-maroon-50 text-brand-maroon border border-brand-maroon-200"
-              aria-label="Call Ramesh Shep (Owner)"
-            >
-              <Phone className="w-4 h-4" />
+              <span className="text-[11px]">WhatsApp</span>
             </a>
 
             <button

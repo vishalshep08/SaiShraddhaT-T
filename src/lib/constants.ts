@@ -34,13 +34,11 @@ export const BUSINESS_CONFIG = {
 
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
-  { label: "Services", href: "/services" },
-  { label: "Taxi Routes", href: "/routes" },
-  { label: "Destinations", href: "/destinations" },
+  { label: "Taxi Services", href: "/services" },
+  { label: "Routes", href: "/routes" },
   { label: "Packages", href: "/packages" },
   { label: "Fleet", href: "/fleet" },
-  { label: "Reviews", href: "/reviews" },
-  { label: "About Us", href: "/about" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 

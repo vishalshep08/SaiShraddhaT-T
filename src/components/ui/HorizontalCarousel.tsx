@@ -134,7 +134,10 @@ export function HorizontalCarousel({
     return () => clearInterval(timer);
   }, [autoplay, isPaused, isVisible, isPrefersReducedMotion, totalItems, autoplayInterval, handleNext]);
 
-  // If desktopMode is "grid", render responsive grid on desktop & horizontal snap carousel on mobile
+  // If desktopMode is "grid", render a SINGLE responsive DOM tree:
+  // On mobile (< md): horizontal flex swipe container with snap
+  // On desktop (>= md): responsive CSS grid (md:grid ...)
+  // ZERO duplicated card elements in the DOM!
   if (desktopMode === "grid") {
     return (
       <div
@@ -150,65 +153,61 @@ export function HorizontalCarousel({
         onFocus={() => setIsPaused(true)}
         onBlur={() => setIsPaused(false)}
       >
-        {/* Mobile Horizontal Carousel (< md) */}
-        <div className="block md:hidden">
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className={cn(
-              "flex overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-2 -mx-4 px-4 sm:-mx-6 sm:px-6 overscroll-x-contain scrollbar-none",
-              gap
-            )}
-            style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
-          >
-            {items.map((item, idx) => (
-              <div
-                key={idx}
-                className={cn(
-                  "shrink-0 snap-start transition-opacity duration-300",
-                  cardWidthMobile
-                )}
-                role="group"
-                aria-roledescription="slide"
-                aria-label={`Slide ${idx + 1} of ${totalItems}`}
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile Dot Indicators & Swipe Hint */}
-          {showDots && totalItems > 1 && (
-            <div className="flex items-center justify-between mt-3 px-1">
-              <div className="flex items-center gap-1.5">
-                {items.map((_, dotIdx) => (
-                  <button
-                    key={dotIdx}
-                    type="button"
-                    onClick={() => scrollToIndex(dotIdx)}
-                    className={cn(
-                      "h-1.5 rounded-full transition-all duration-300 focus:outline-none",
-                      dotIdx === activeIndex
-                        ? "w-6 bg-brand-maroon"
-                        : "w-2 bg-stone-300 hover:bg-stone-400"
-                    )}
-                    aria-label={`Go to slide ${dotIdx + 1}`}
-                  />
-                ))}
-              </div>
-
-              <span className="text-[11px] font-bold text-stone-600 flex items-center gap-1">
-                <span>Swipe for more</span>
-                <span>→</span>
-              </span>
-            </div>
+        {/* Single Responsive Track: flex scroll on mobile, CSS grid on desktop */}
+        <div
+          ref={scrollRef}
+          onScroll={handleScroll}
+          className={cn(
+            "flex overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory py-2 -mx-4 px-4 sm:-mx-6 sm:px-6 overscroll-x-contain scrollbar-none",
+            "md:grid md:overflow-visible md:snap-none md:mx-0 md:px-0 md:py-0",
+            desktopGridCols,
+            gap
           )}
+          style={{ WebkitOverflowScrolling: "touch", scrollbarWidth: "none" }}
+        >
+          {items.map((item, idx) => (
+            <div
+              key={idx}
+              className={cn(
+                "shrink-0 snap-start transition-opacity duration-300",
+                cardWidthMobile,
+                "md:shrink md:w-auto md:h-full"
+              )}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`Slide ${idx + 1} of ${totalItems}`}
+            >
+              {item}
+            </div>
+          ))}
         </div>
 
-        {/* Desktop Multi-column Grid (>= md) */}
-        <div className={cn("hidden md:grid", desktopGridCols, gap)}>
-          {items}
-        </div>
+        {/* Mobile-Only Dot Indicators & Swipe Hint (< md) */}
+        {showDots && totalItems > 1 && (
+          <div className="flex md:hidden items-center justify-between mt-3 px-1">
+            <div className="flex items-center gap-1.5">
+              {items.map((_, dotIdx) => (
+                <button
+                  key={dotIdx}
+                  type="button"
+                  onClick={() => scrollToIndex(dotIdx)}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-300 focus:outline-none",
+                    dotIdx === activeIndex
+                      ? "w-6 bg-brand-maroon"
+                      : "w-2 bg-stone-300 hover:bg-stone-400"
+                  )}
+                  aria-label={`Go to slide ${dotIdx + 1}`}
+                />
+              ))}
+            </div>
+
+            <span className="text-[11px] font-bold text-stone-600 flex items-center gap-1">
+              <span>Swipe for more</span>
+              <span>→</span>
+            </span>
+          </div>
+        )}
       </div>
     );
   }

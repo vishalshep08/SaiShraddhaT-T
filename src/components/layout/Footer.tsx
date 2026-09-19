@@ -70,12 +70,12 @@ export function Footer({ logoUrl }: FooterProps) {
               {POPULAR_DESTINATIONS.slice(0, 5).map((d) => (
                 <li key={d.slug}>
                   <Link href={`/destinations#${d.slug}`} className="hover:text-brand-saffron-300 transition-colors">
-                    Shirdi to {d.name} Taxi
+                    {d.name}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link href="/services#airport" className="hover:text-brand-saffron-300 transition-colors">
+                <Link href="/services#airport-railway-transfers" className="hover:text-brand-saffron-300 transition-colors">
                   Shirdi Airport (SAG) Drop
                 </Link>
               </li>

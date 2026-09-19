@@ -93,7 +93,10 @@ export function DestinationsSection() {
       {/* 6 Concise Route Cards - Single Responsive DOM */}
       <HorizontalCarousel
         ariaLabel="Popular taxi routes from Shirdi"
-        autoplay={false}
+        autoplay={true}
+        autoplayInterval={4000}
+        resumeDelay={6000}
+        cardWidthMobile="w-[84vw] xs:w-[320px] sm:w-[350px]"
         desktopMode="grid"
         desktopGridCols="md:grid-cols-2 lg:grid-cols-3"
       >

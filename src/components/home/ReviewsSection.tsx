@@ -40,9 +40,12 @@ export async function ReviewsSection() {
 
           <HorizontalCarousel
             ariaLabel="Customer reviews and traveller testimonials"
-            autoplay={false}
+            autoplay={true}
+            autoplayInterval={4000}
+            resumeDelay={6000}
             desktopMode="grid"
             desktopGridCols="md:grid-cols-3"
+            cardWidthMobile="w-[84vw] xs:w-[320px] sm:w-[350px]"
           >
             {reviews.map((r) => (
               <div key={r.id} className="h-full">

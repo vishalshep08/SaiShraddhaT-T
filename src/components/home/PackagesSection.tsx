@@ -65,9 +65,12 @@ export function PackagesSection() {
       {/* 3 Compact Cards */}
       <HorizontalCarousel
         ariaLabel="Popular Pilgrimage Packages"
-        autoplay={false}
+        autoplay={true}
+        autoplayInterval={4000}
+        resumeDelay={6000}
         desktopMode="grid"
         desktopGridCols="md:grid-cols-3"
+        cardWidthMobile="w-[84vw] xs:w-[320px] sm:w-[350px]"
       >
         {POPULAR_PACKAGES.map((pkg) => (
           <div

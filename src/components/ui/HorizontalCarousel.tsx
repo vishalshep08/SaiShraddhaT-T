@@ -17,6 +17,8 @@ export interface HorizontalCarouselProps {
   ariaLabel?: string;
   autoplay?: boolean;
   autoplayInterval?: number;
+  resumeDelay?: number;
+  pauseOnInteraction?: boolean;
   desktopMode?: "grid" | "carousel";
   desktopGridCols?: string;
   cardWidthMobile?: string;
@@ -30,26 +32,32 @@ export function HorizontalCarousel({
   children,
   ariaLabel = "Featured items carousel",
   autoplay = false,
-  autoplayInterval = 4500,
+  autoplayInterval = 4000,
+  resumeDelay = 6000,
+  pauseOnInteraction = true,
   desktopMode = "grid",
   desktopGridCols = "md:grid-cols-2 lg:grid-cols-3",
   cardWidthMobile = "w-[84vw] xs:w-[320px] sm:w-[360px]",
-  gap = "gap-4 sm:gap-6",
+  gap = "gap-3.5 sm:gap-4",
   showDots = true,
   showArrows = true,
   className,
 }: HorizontalCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isPrefersReducedMotion, setIsPrefersReducedMotion] = useState(false);
 
   const items = Children.toArray(children).filter(isValidElement);
   const totalItems = items.length;
 
-  // Check user preference for reduced motion
+  // 1. Reduced motion detection
   useEffect(() => {
     if (typeof window === "undefined") return;
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -63,7 +71,8 @@ export function HorizontalCarousel({
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  // Track visibility with IntersectionObserver so autoplay only runs when visible
+  // 2. Viewport visibility detection with IntersectionObserver
+  // Autoplay only activates when the carousel is meaningfully visible (>= 40%) in the viewport
   useEffect(() => {
     if (!containerRef.current || typeof window === "undefined" || !("IntersectionObserver" in window)) {
       setIsVisible(true);
@@ -74,36 +83,56 @@ export function HorizontalCarousel({
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 }
+      { threshold: 0.4 }
     );
 
     observer.observe(containerRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Update active index on scroll
+  // 3. Tab visibility detection (pause when browser tab is inactive)
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible") {
+        setIsVisible(false);
+      } else if (containerRef.current) {
+        // Re-check bounding rect on return
+        const rect = containerRef.current.getBoundingClientRect();
+        const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
+        setIsVisible(inViewport);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
+
+  // 4. Update activeIndex on manual or programmatic scroll
   const handleScroll = useCallback(() => {
     if (!scrollRef.current) return;
     const container = scrollRef.current;
-    const scrollLeft = container.scrollLeft;
-    const itemWidth = container.firstElementChild
-      ? (container.firstElementChild as HTMLElement).offsetWidth + 16
-      : container.clientWidth;
+    const firstChild = container.firstElementChild as HTMLElement;
+    if (!firstChild) return;
 
-    const newIndex = Math.round(scrollLeft / itemWidth);
+    // Use actual card offset width + gap for accurate index calculation
+    const itemWidth = firstChild.offsetWidth + 14;
+    const newIndex = Math.round(container.scrollLeft / itemWidth);
     setActiveIndex(Math.min(Math.max(newIndex, 0), totalItems - 1));
   }, [totalItems]);
 
-  // Scroll to a specific item strictly inside the horizontal container without touching window vertical scroll
+  // 5. Scroll strictly inside the horizontal container without touching vertical page scroll
   const scrollToIndex = useCallback(
     (index: number) => {
       if (!scrollRef.current) return;
       const container = scrollRef.current;
       const targetChild = container.children[index] as HTMLElement;
+      const firstChild = container.firstElementChild as HTMLElement;
 
-      if (targetChild) {
-        // Compute left offset relative to scroll container
-        const targetLeft = targetChild.offsetLeft - container.offsetLeft;
+      if (targetChild && firstChild) {
+        // Target offset relative to first item inside the scroll track
+        const targetLeft = targetChild.offsetLeft - firstChild.offsetLeft;
         container.scrollTo({
           left: targetLeft,
           behavior: isPrefersReducedMotion ? "auto" : "smooth",
@@ -114,30 +143,98 @@ export function HorizontalCarousel({
   );
 
   const handleNext = useCallback(() => {
+    if (totalItems <= 1) return;
     const nextIndex = (activeIndex + 1) % totalItems;
     scrollToIndex(nextIndex);
   }, [activeIndex, totalItems, scrollToIndex]);
 
   const handlePrev = useCallback(() => {
+    if (totalItems <= 1) return;
     const prevIndex = (activeIndex - 1 + totalItems) % totalItems;
     scrollToIndex(prevIndex);
   }, [activeIndex, totalItems, scrollToIndex]);
 
-  // Autoplay handler — only fires when element is visible in viewport and not paused
-  useEffect(() => {
-    if (!autoplay || isPaused || !isVisible || isPrefersReducedMotion || totalItems <= 1) return;
+  // 6. User Touch & Interaction Management: immediate pause, delayed resume
+  const startInteraction = useCallback(() => {
+    if (!pauseOnInteraction) return;
 
-    const timer = setInterval(() => {
+    // Clear any existing resume timeout and autoplay timer
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = null;
+    }
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    setIsInteracting(true);
+  }, [pauseOnInteraction]);
+
+  const endInteraction = useCallback(() => {
+    if (!pauseOnInteraction) return;
+
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+    }
+
+    // Wait comfortable idle period (default 6000ms) before resuming autoplay
+    resumeTimeoutRef.current = setTimeout(() => {
+      setIsInteracting(false);
+      resumeTimeoutRef.current = null;
+    }, resumeDelay);
+  }, [pauseOnInteraction, resumeDelay]);
+
+  // 7. Autoplay Loop Manager — strictly single timer instance
+  useEffect(() => {
+    // Clear any previous interval
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    // Guard conditions: disabled if reduced motion, paused, offscreen, or interacting
+    if (!autoplay || isInteracting || isHovered || !isVisible || isPrefersReducedMotion || totalItems <= 1) {
+      return;
+    }
+
+    // In grid desktopMode, do not run carousel autoplay on desktop viewports
+    if (desktopMode === "grid" && typeof window !== "undefined" && window.innerWidth >= 768) {
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
       handleNext();
     }, autoplayInterval);
 
-    return () => clearInterval(timer);
-  }, [autoplay, isPaused, isVisible, isPrefersReducedMotion, totalItems, autoplayInterval, handleNext]);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [
+    autoplay,
+    isInteracting,
+    isHovered,
+    isVisible,
+    isPrefersReducedMotion,
+    totalItems,
+    desktopMode,
+    autoplayInterval,
+    handleNext,
+  ]);
 
-  // If desktopMode is "grid", render a SINGLE responsive DOM tree:
-  // On mobile (< md): horizontal flex swipe container with snap
-  // On desktop (>= md): responsive CSS grid (md:grid ...)
-  // ZERO duplicated card elements in the DOM!
+  // 8. Global cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // RENDER: SINGLE RESPONSIVE DOM TREE (NO DUPLICATION)
+  // ─────────────────────────────────────────────────────────────────────────────
   if (desktopMode === "grid") {
     return (
       <div
@@ -146,14 +243,16 @@ export function HorizontalCarousel({
         role="region"
         aria-roledescription="carousel"
         aria-label={ariaLabel}
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
-        onFocus={() => setIsPaused(true)}
-        onBlur={() => setIsPaused(false)}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={startInteraction}
+        onTouchEnd={endInteraction}
+        onMouseDown={startInteraction}
+        onMouseUp={endInteraction}
+        onFocus={startInteraction}
+        onBlur={endInteraction}
       >
-        {/* Single Responsive Track: flex scroll on mobile, CSS grid on desktop */}
+        {/* Single Responsive Track: flex scroll on mobile (< md), CSS grid on desktop (>= md) */}
         <div
           ref={scrollRef}
           onScroll={handleScroll}
@@ -190,7 +289,11 @@ export function HorizontalCarousel({
                 <button
                   key={dotIdx}
                   type="button"
-                  onClick={() => scrollToIndex(dotIdx)}
+                  onClick={() => {
+                    startInteraction();
+                    scrollToIndex(dotIdx);
+                    endInteraction();
+                  }}
                   className={cn(
                     "h-1.5 rounded-full transition-all duration-300 focus:outline-none",
                     dotIdx === activeIndex
@@ -202,8 +305,8 @@ export function HorizontalCarousel({
               ))}
             </div>
 
-            <span className="text-[11px] font-bold text-stone-600 flex items-center gap-1">
-              <span>Swipe for more</span>
+            <span className="text-[11px] font-bold text-stone-500 flex items-center gap-1">
+              <span>Swipe</span>
               <span>→</span>
             </span>
           </div>
@@ -220,12 +323,14 @@ export function HorizontalCarousel({
       role="region"
       aria-roledescription="carousel"
       aria-label={ariaLabel}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setIsPaused(false)}
-      onFocus={() => setIsPaused(true)}
-      onBlur={() => setIsPaused(false)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={startInteraction}
+      onTouchEnd={endInteraction}
+      onMouseDown={startInteraction}
+      onMouseUp={endInteraction}
+      onFocus={startInteraction}
+      onBlur={endInteraction}
     >
       {/* Scroll Track */}
       <div
@@ -263,7 +368,11 @@ export function HorizontalCarousel({
               <button
                 key={dotIdx}
                 type="button"
-                onClick={() => scrollToIndex(dotIdx)}
+                onClick={() => {
+                  startInteraction();
+                  scrollToIndex(dotIdx);
+                  endInteraction();
+                }}
                 className={cn(
                   "h-1.5 rounded-full transition-all duration-300 focus:outline-none",
                   dotIdx === activeIndex
@@ -281,7 +390,11 @@ export function HorizontalCarousel({
           <div className="hidden sm:flex items-center gap-2">
             <button
               type="button"
-              onClick={handlePrev}
+              onClick={() => {
+                startInteraction();
+                handlePrev();
+                endInteraction();
+              }}
               className="p-2 rounded-full border border-stone-300 bg-white text-stone-700 hover:bg-stone-50 hover:border-brand-maroon transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-maroon/20"
               aria-label="Previous slide"
             >
@@ -289,7 +402,11 @@ export function HorizontalCarousel({
             </button>
             <button
               type="button"
-              onClick={handleNext}
+              onClick={() => {
+                startInteraction();
+                handleNext();
+                endInteraction();
+              }}
               className="p-2 rounded-full border border-stone-300 bg-white text-stone-700 hover:bg-stone-50 hover:border-brand-maroon transition-all shadow-xs focus:outline-none focus:ring-2 focus:ring-brand-maroon/20"
               aria-label="Next slide"
             >

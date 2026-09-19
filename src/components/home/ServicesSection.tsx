@@ -70,10 +70,12 @@ export function ServicesSection() {
       {/* 4 Concise Cards: Single Responsive DOM */}
       <HorizontalCarousel
         ariaLabel="Travel Services From Shirdi"
-        autoplay={false}
+        autoplay={true}
+        autoplayInterval={4500}
+        resumeDelay={6000}
         desktopMode="grid"
         desktopGridCols="md:grid-cols-2 lg:grid-cols-4"
-        cardWidthMobile="w-[85vw] sm:w-[320px]"
+        cardWidthMobile="w-[84vw] xs:w-[320px] sm:w-[350px]"
       >
         {CONCISE_SERVICES.map((service, idx) => {
           const Icon = service.icon;

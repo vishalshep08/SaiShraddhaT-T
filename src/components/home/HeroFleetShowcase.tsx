@@ -39,6 +39,8 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
+  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const nextSlide = useCallback(() => {
     if (total === 0) return;
     setCurrentIndex((prev) => (prev + 1) % total);
@@ -49,21 +51,33 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
     setCurrentIndex((prev) => (prev - 1 + total) % total);
   }, [total]);
 
-  // Automatic slow looping (5.5s) - pauses on interaction or reduced motion
+  // Automatic slow looping (4s) - pauses on interaction or reduced motion
   useEffect(() => {
     if (isPaused || prefersReducedMotion || total <= 1) return;
 
     timerRef.current = setInterval(() => {
       nextSlide();
-    }, 5500);
+    }, 4000);
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [isPaused, prefersReducedMotion, total, nextSlide]);
 
-  // Touch Swipe Handlers for mobile
+  // Clean up resume timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  // Touch Swipe Handlers for mobile with 6s delayed resume
   const handleTouchStart = (e: React.TouchEvent) => {
+    if (resumeTimeoutRef.current) {
+      clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = null;
+    }
     setIsPaused(true);
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
@@ -74,19 +88,23 @@ export function HeroFleetShowcase({ vehicles }: HeroFleetShowcaseProps) {
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) {
-      setIsPaused(false);
-      return;
-    }
-    const distance = touchStart - touchEnd;
-    const minSwipeDistance = 40;
+    if (touchStart && touchEnd) {
+      const distance = touchStart - touchEnd;
+      const minSwipeDistance = 40;
 
-    if (distance > minSwipeDistance) {
-      nextSlide();
-    } else if (distance < -minSwipeDistance) {
-      prevSlide();
+      if (distance > minSwipeDistance) {
+        nextSlide();
+      } else if (distance < -minSwipeDistance) {
+        prevSlide();
+      }
     }
-    setIsPaused(false);
+
+    // Delay autoplay resumption by 6 seconds (6000ms) after touch release
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      setIsPaused(false);
+      resumeTimeoutRef.current = null;
+    }, 6000);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

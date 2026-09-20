@@ -25,6 +25,7 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
 
   return (
     <div
+      id={service.slug}
       className={`rounded-2xl bg-white border border-stone-200/90 p-6 sm:p-7 flex flex-col justify-between hover:border-brand-maroon/40 hover:shadow-md transition-all space-y-6 ${
         featured ? "md:col-span-2 bg-gradient-to-br from-white via-white to-brand-ivory-100/60" : ""
       }`}

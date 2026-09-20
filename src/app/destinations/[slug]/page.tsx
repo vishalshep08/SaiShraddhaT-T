@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import {
@@ -12,18 +13,21 @@ import {
   MapPin,
   Clock,
   Car,
+  Navigation,
 } from "lucide-react";
 import { DESTINATIONS_DATA } from "@/data/destinationsData";
 import { VEHICLE_CATEGORIES } from "@/data/fleetData";
 import { TOUR_PACKAGES_DATA } from "@/data/packagesData";
 import { BUSINESS_CONFIG } from "@/lib/constants";
-import { buildWhatsAppLink, buildPhoneLink } from "@/lib/utils";
+import { buildWhatsAppLink, buildPhoneLink, formatINR } from "@/lib/utils";
 import { constructMetadata } from "@/lib/seo";
 import { ServiceFAQ } from "@/components/services/ServiceFAQ";
 import { VehicleCategoryCard } from "@/components/fleet/VehicleCategoryCard";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { InlineQuoteForm } from "@/components/enquiry/InlineQuoteForm";
+import { PlacesCoveredSection } from "@/components/destinations/PlacesCoveredSection";
+import { DestinationGallerySection } from "@/components/destinations/DestinationGallerySection";
 
 interface DestinationPageProps {
   params: {
@@ -66,6 +70,29 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
 
   const ramesh = BUSINESS_CONFIG.contacts[0];
 
+  const heroImageUrl = dest.imageUrl || "/images/destinations/fallback-destination.jpg";
+  const heroImageAlt = dest.imageAlt || `${dest.name} travel destination`;
+  const startingFare = dest.startingFare;
+
+  const places =
+    dest.placesCovered && dest.placesCovered.length > 0
+      ? dest.placesCovered
+      : dest.keyAttractions.map((attr) => ({
+          name: attr,
+          description: `Key holy and historical landmark in ${dest.name}.`,
+        }));
+
+  const galleryImages =
+    dest.galleryImages && dest.galleryImages.length > 0
+      ? dest.galleryImages
+      : [
+          {
+            url: heroImageUrl,
+            alt: heroImageAlt,
+            title: dest.name,
+          },
+        ];
+
   const recommendedVehicles = VEHICLE_CATEGORIES.filter((v) =>
     dest.recommendedVehicleSlugs.includes(v.slug)
   );
@@ -77,7 +104,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
   const otherDests = DESTINATIONS_DATA.filter((d) => d.slug !== dest.slug).slice(0, 6);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       {/* 1. Breadcrumbs */}
       <nav
         aria-label="Breadcrumb"
@@ -94,75 +121,145 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
         <span className="font-semibold text-brand-charcoal-900">{dest.name}</span>
       </nav>
 
-      {/* 2. Hero Section */}
-      <section className="bg-white rounded-2xl p-6 sm:p-10 border border-stone-200 shadow-sm space-y-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="maroon" size="sm">
-            {dest.destinationType.replace("_", " ").toUpperCase()}
-          </Badge>
-          <span className="text-xs text-stone-500 font-medium">
-            • {dest.district}, {dest.state}
-          </span>
-          <span className="text-xs text-stone-400 hidden sm:inline">•</span>
-          <span className="text-xs text-brand-maroon font-semibold hidden sm:inline">
-            Direct Cabs from Shirdi
-          </span>
-        </div>
+      {/* 2. Image-First Hero Section */}
+      <section className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm">
+        {/* Large Hero Banner Image */}
+        <div className="relative aspect-video sm:aspect-21/9 w-full overflow-hidden bg-stone-900">
+          <Image
+            src={heroImageUrl}
+            alt={heroImageAlt}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 95vw, 1200px"
+            priority
+            className="object-cover"
+          />
+          {/* Subtle Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
 
-        <div className="space-y-3 max-w-4xl">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-charcoal-900 tracking-tight leading-tight">
-            {dest.name} Travel From Shirdi
-          </h1>
-          <p className="text-base sm:text-lg text-stone-600 leading-relaxed">
-            {dest.shortDescription}
-          </p>
-        </div>
+          {/* Top Overlays */}
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+            <Badge variant="saffron" size="sm" className="shadow-md">
+              {dest.destinationType.replace("_", " ").toUpperCase()} • {dest.district}
+            </Badge>
 
-        {/* Quick Route Context Pill */}
-        <div className="flex flex-wrap items-center gap-4 text-xs text-stone-700 bg-stone-50 p-3.5 rounded-xl border border-stone-200/80">
-          <div className="flex items-center gap-1.5 font-semibold">
-            <MapPin className="w-4 h-4 text-brand-maroon shrink-0" />
-            <span>{dest.approxDistanceKmText}</span>
+            {startingFare && (
+              <span className="text-xs sm:text-sm font-extrabold text-brand-charcoal-900 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-full shadow-md">
+                From {formatINR(startingFare)}*
+              </span>
+            )}
           </div>
-          <span>•</span>
-          <div className="flex items-center gap-1.5 font-semibold">
-            <Clock className="w-4 h-4 text-brand-maroon shrink-0" />
-            <span>{dest.approxDurationText}</span>
+
+          {/* Bottom Banner Title */}
+          <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-8 right-4 sm:right-8 text-white space-y-1">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-md">
+              {dest.name} Travel From Shirdi
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-200 line-clamp-2 max-w-3xl drop-shadow-sm">
+              {dest.shortDescription}
+            </p>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="pt-2 flex flex-wrap items-center gap-3">
-          <Link href={`/routes/${dest.routeSlug}`}>
-            <Button size="lg" variant="primary" rightIcon={<ArrowRight className="w-4 h-4" />}>
-              View Shirdi to {dest.shortName} Cab Options
-            </Button>
-          </Link>
+        {/* Hero Details & Instant Action Bar */}
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Quick Route Metrics Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Distance</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <MapPin className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span>{dest.approxDistanceKmText}</span>
+              </div>
+            </div>
 
-          <a
-            href={buildWhatsAppLink({
-              drop: dest.name,
-              customMessage: `Hello ${BUSINESS_CONFIG.name}, I would like to enquire about visiting ${dest.name} from Shirdi.`,
-            })}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-emerald-600 text-emerald-800 hover:bg-emerald-50"
-              leftIcon={<MessageSquare className="w-4 h-4 text-emerald-600" />}
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Approx. Travel Time</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Clock className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span>{dest.approxDurationText}</span>
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Service Type</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Navigation className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span className="truncate">One-Way & Roundtrip</span>
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Owned Fleet</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Car className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span className="truncate">Ertiga & Tavera AC</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Immediate Action Buttons */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <Link href={`/routes/${dest.routeSlug}`} className="grow sm:grow-0">
+              <Button
+                size="lg"
+                variant="primary"
+                className="w-full sm:w-auto"
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+              >
+                View Shirdi to {dest.shortName} Cab Options
+              </Button>
+            </Link>
+
+            <a
+              href={buildWhatsAppLink({
+                drop: dest.name,
+                customMessage: `Hello Ramesh Shep, I would like to book a cab to ${dest.name} from Shirdi. Please share fares and availability.`,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grow sm:grow-0"
             >
-              Enquire on WhatsApp
-            </Button>
-          </a>
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto border-emerald-600 text-emerald-800 hover:bg-emerald-50"
+                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-600" />}
+              >
+                WhatsApp Ramesh Shep
+              </Button>
+            </a>
+
+            <a href={buildPhoneLink(ramesh.primaryPhoneRaw)} className="grow sm:grow-0">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto"
+                leftIcon={<Phone className="w-4 h-4 text-brand-maroon" />}
+              >
+                Call: {ramesh.primaryPhone}
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* 3. Detailed Overview & Why Visit */}
+      {/* 3. Visual "Places You Can Visit in this Destination" */}
+      <PlacesCoveredSection
+        places={places}
+        title={`Key Places to Visit in ${dest.name}`}
+        subtitle="Explore top temples, historical sights, and cultural spots easily with our private taxi service."
+      />
+
+      {/* 4. Destination Photo Gallery with Lightbox */}
+      <DestinationGallerySection
+        images={galleryImages}
+        destinationName={dest.name}
+      />
+
+      {/* 5. Detailed Overview & Why Visit */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
             <h2 className="text-2xl font-bold text-brand-charcoal-900">
               About {dest.name}
             </h2>
@@ -180,8 +277,8 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
             </div>
           </div>
 
-          {/* Key Attractions */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
+          {/* Key Attractions List */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
             <h3 className="text-xl font-bold text-brand-charcoal-900">
               Important Places & Holy Attractions in {dest.shortName}
             </h3>
@@ -196,7 +293,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
           </div>
 
           {/* Dedicated Route Bridge Card */}
-          <div className="bg-brand-ivory-200/90 rounded-xl p-6 sm:p-8 border border-stone-300 space-y-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="bg-brand-ivory-200/90 rounded-2xl p-6 sm:p-8 border border-stone-300 space-y-3 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <span className="text-xs font-bold text-brand-maroon uppercase tracking-wider block">
                 Direct Taxi Service Available
@@ -217,7 +314,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
           </div>
 
           {/* FAQs */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs">
             <ServiceFAQ faqs={dest.faqs} title={`${dest.name} Travel FAQ`} />
           </div>
         </div>
@@ -226,7 +323,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
         <div className="lg:col-span-4 space-y-6">
           {/* Related Tour Packages */}
           {relatedPackages.length > 0 && (
-            <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-xs space-y-4">
+            <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-4">
               <h3 className="text-base font-bold text-brand-charcoal-900 border-b border-stone-100 pb-2">
                 Pilgrimage Tour Packages
               </h3>
@@ -250,7 +347,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
           )}
 
           {/* Direct Shirdi Desk Contact Box */}
-          <div className="bg-brand-maroon text-white rounded-xl p-6 border border-brand-maroon-800 space-y-4 shadow-md">
+          <div className="bg-brand-maroon text-white rounded-2xl p-6 border border-brand-maroon-800 space-y-4 shadow-md">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-brand-saffron-300" />
               <h4 className="font-bold text-base">Book Cab From Shirdi</h4>
@@ -285,7 +382,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
         </div>
       </section>
 
-      {/* 4. Recommended Vehicles Section */}
+      {/* 6. Recommended Vehicles Section */}
       <section className="space-y-6 pt-4 border-t border-stone-200">
         <div>
           <Badge variant="maroon" size="sm" className="mb-1.5">Vehicle Fleet</Badge>
@@ -304,7 +401,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
         </div>
       </section>
 
-      {/* 5. Embedded Quote Form */}
+      {/* 7. Embedded Quote Form */}
       <section className="bg-white rounded-2xl p-6 sm:p-10 border border-stone-200 shadow-sm space-y-6 max-w-4xl mx-auto">
         <div className="space-y-1 border-b border-stone-100 pb-4">
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-maroon-50 border border-brand-maroon-200 text-brand-maroon text-xs font-semibold">
@@ -336,7 +433,7 @@ export default function DestinationDetailPage({ params }: DestinationPageProps) 
         />
       </section>
 
-      {/* 6. Explore Other Destinations */}
+      {/* 8. Explore Other Destinations */}
       <section className="space-y-4 pt-6 border-t border-stone-200">
         <h3 className="text-xl font-bold text-brand-charcoal-900">
           Other Destinations Reachable From Shirdi

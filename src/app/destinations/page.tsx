@@ -1,22 +1,22 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ShieldCheck, MapPin, ArrowRight, Clock, MessageSquare, CheckCircle2 } from "lucide-react";
 import { DESTINATIONS_DATA } from "@/data/destinationsData";
 import { BUSINESS_CONFIG } from "@/lib/constants";
-import { buildWhatsAppLink, buildPhoneLink } from "@/lib/utils";
+import { buildWhatsAppLink, formatINR } from "@/lib/utils";
 import { constructMetadata } from "@/lib/seo";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 
 export const metadata = constructMetadata({
   title: "Destinations From Shirdi | Pilgrimage, Heritage & Outstation Travel",
-  description: "Explore all destinations reachable from Shirdi with Sai Shraddha Tours & Travels. Pilgrimage shrines (Trimbakeshwar, Shani Shingnapur, Grishneshwar), caves, hill stations, and major cities.",
+  description:
+    "Explore all destinations reachable from Shirdi with Sai Shraddha Tours & Travels. Pilgrimage shrines (Trimbakeshwar, Shani Shingnapur, Grishneshwar), caves, hill stations, and major cities.",
   canonicalPath: "/destinations",
 });
 
 export default function DestinationsPage() {
-  const ramesh = BUSINESS_CONFIG.contacts[0];
-
   const pilgrimageDests = DESTINATIONS_DATA.filter((d) => d.destinationType === "pilgrimage");
   const heritageAndCities = DESTINATIONS_DATA.filter(
     (d) => d.destinationType === "heritage" || d.destinationType === "city"
@@ -81,51 +81,80 @@ export default function DestinationsPage() {
           {pilgrimageDests.map((dest) => (
             <div
               key={dest.slug}
-              className="p-6 rounded-xl bg-white border border-stone-200 shadow-xs hover:border-brand-maroon/40 hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+              id={dest.slug}
+              className="group rounded-2xl bg-white border border-stone-200 overflow-hidden shadow-xs hover:border-brand-maroon/40 hover:shadow-md transition-all flex flex-col justify-between"
             >
-              <div className="space-y-2.5">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="text-lg font-bold text-brand-charcoal-900 leading-snug">
-                    {dest.name}
-                  </h3>
-                  <span className="text-[11px] font-semibold text-brand-maroon bg-brand-maroon-50 px-2 py-0.5 rounded shrink-0">
+              {/* Card Image Banner */}
+              <div className="relative aspect-16/10 w-full overflow-hidden bg-stone-100">
+                <Image
+                  src={dest.imageUrl || "/images/destinations/fallback-destination.jpg"}
+                  alt={dest.imageAlt || dest.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+
+                <div className="absolute top-3 left-3">
+                  <span className="text-[11px] font-bold text-white bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/20">
                     {dest.district}
                   </span>
                 </div>
 
-                <div className="text-xs text-stone-500 font-medium flex items-center gap-2">
-                  <MapPin className="w-3.5 h-3.5 text-stone-400" />
-                  <span>{dest.approxDistanceKmText}</span>
-                </div>
+                {dest.startingFare && (
+                  <div className="absolute top-3 right-3">
+                    <span className="text-xs font-extrabold text-brand-maroon bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-xs">
+                      From {formatINR(dest.startingFare)}*
+                    </span>
+                  </div>
+                )}
 
-                <p className="text-xs text-stone-600 leading-relaxed line-clamp-3">
-                  {dest.shortDescription}
-                </p>
-
-                <div className="pt-2 space-y-1">
-                  {dest.keyAttractions.slice(0, 3).map((attr, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
-                      <CheckCircle2 className="w-3 h-3 text-brand-maroon shrink-0" />
-                      <span className="truncate">{attr}</span>
-                    </div>
-                  ))}
+                <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                  <h3 className="font-extrabold text-lg leading-tight drop-shadow-sm">
+                    {dest.name}
+                  </h3>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
-                <Link
-                  href={`/destinations/${dest.slug}`}
-                  className="text-xs font-semibold text-brand-charcoal-900 hover:text-brand-maroon transition-colors"
-                >
-                  Destination Guide →
-                </Link>
+              {/* Card Content */}
+              <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-2.5">
+                  <div className="text-xs text-stone-500 font-medium flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-brand-maroon shrink-0" />
+                    <span>{dest.approxDistanceKmText}</span>
+                  </div>
 
-                <Link
-                  href={`/routes/${dest.routeSlug}`}
-                  className="text-xs font-bold text-brand-maroon hover:underline"
-                >
-                  Taxi from Shirdi →
-                </Link>
+                  <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
+                    {dest.shortDescription}
+                  </p>
+
+                  <div className="pt-1 space-y-1">
+                    {dest.keyAttractions.slice(0, 2).map((attr, i) => (
+                      <div key={i} className="flex items-center gap-1.5 text-xs text-stone-700">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-brand-maroon shrink-0" />
+                        <span className="truncate">{attr}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Card Actions */}
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/destinations/${dest.slug}`}
+                    className="text-xs font-semibold text-stone-600 hover:text-brand-maroon transition-colors"
+                  >
+                    Guide →
+                  </Link>
+
+                  <Link
+                    href={`/routes/${dest.routeSlug}`}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-maroon-50 text-brand-maroon hover:bg-brand-maroon hover:text-white text-xs font-bold transition-colors"
+                  >
+                    <span>Taxi Options</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
@@ -146,31 +175,72 @@ export default function DestinationsPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {heritageAndCities.map((dest) => (
             <div
               key={dest.slug}
-              className="p-5 rounded-xl bg-white border border-stone-200 shadow-xs hover:border-brand-maroon/40 hover:shadow-md transition-all flex flex-col justify-between space-y-3"
+              id={dest.slug}
+              className="group rounded-2xl bg-white border border-stone-200 overflow-hidden shadow-xs hover:border-brand-maroon/40 hover:shadow-md transition-all flex flex-col justify-between"
             >
-              <div className="space-y-2">
-                <h3 className="font-bold text-base text-brand-charcoal-900">
-                  {dest.name}
-                </h3>
-                <p className="text-xs text-stone-500">
-                  {dest.approxDistanceKmText}
-                </p>
-                <p className="text-xs text-stone-600 leading-relaxed line-clamp-3">
-                  {dest.shortDescription}
-                </p>
+              <div className="relative aspect-16/10 w-full overflow-hidden bg-stone-100">
+                <Image
+                  src={dest.imageUrl || "/images/destinations/fallback-destination.jpg"}
+                  alt={dest.imageAlt || dest.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+
+                <div className="absolute top-3 left-3">
+                  <span className="text-[11px] font-bold text-white bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/20">
+                    {dest.district}
+                  </span>
+                </div>
+
+                {dest.startingFare && (
+                  <div className="absolute top-3 right-3">
+                    <span className="text-xs font-extrabold text-brand-maroon bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-xs">
+                      From {formatINR(dest.startingFare)}*
+                    </span>
+                  </div>
+                )}
+
+                <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                  <h3 className="font-extrabold text-lg leading-tight drop-shadow-sm">
+                    {dest.name}
+                  </h3>
+                </div>
               </div>
 
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between text-xs">
-                <Link href={`/destinations/${dest.slug}`} className="text-stone-600 hover:text-brand-maroon font-medium">
-                  Details
-                </Link>
-                <Link href={`/routes/${dest.routeSlug}`} className="text-brand-maroon font-bold hover:underline">
-                  Book Cab →
-                </Link>
+              <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="text-xs text-stone-500 font-medium flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-brand-maroon shrink-0" />
+                    <span>{dest.approxDistanceKmText}</span>
+                  </div>
+
+                  <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
+                    {dest.shortDescription}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/destinations/${dest.slug}`}
+                    className="text-xs font-semibold text-stone-600 hover:text-brand-maroon transition-colors"
+                  >
+                    Guide →
+                  </Link>
+
+                  <Link
+                    href={`/routes/${dest.routeSlug}`}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-maroon-50 text-brand-maroon hover:bg-brand-maroon hover:text-white text-xs font-bold transition-colors"
+                  >
+                    <span>Taxi Options</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}
@@ -195,29 +265,68 @@ export default function DestinationsPage() {
           {hillStations.map((dest) => (
             <div
               key={dest.slug}
-              className="p-6 rounded-xl bg-white border border-stone-200 shadow-xs hover:border-brand-maroon/40 transition-all flex flex-col justify-between space-y-3"
+              id={dest.slug}
+              className="group rounded-2xl bg-white border border-stone-200 overflow-hidden shadow-xs hover:border-brand-maroon/40 hover:shadow-md transition-all flex flex-col justify-between"
             >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-lg text-brand-charcoal-900">
+              <div className="relative aspect-16/10 w-full overflow-hidden bg-stone-100">
+                <Image
+                  src={dest.imageUrl || "/images/destinations/fallback-destination.jpg"}
+                  alt={dest.imageAlt || dest.name}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
+
+                <div className="absolute top-3 left-3">
+                  <span className="text-[11px] font-bold text-white bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/20">
+                    {dest.district}
+                  </span>
+                </div>
+
+                {dest.startingFare && (
+                  <div className="absolute top-3 right-3">
+                    <span className="text-xs font-extrabold text-brand-maroon bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-xs">
+                      From {formatINR(dest.startingFare)}*
+                    </span>
+                  </div>
+                )}
+
+                <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                  <h3 className="font-extrabold text-lg leading-tight drop-shadow-sm">
                     {dest.name}
                   </h3>
-                  <span className="text-xs text-stone-500">{dest.approxDistanceKmText}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                  {dest.shortDescription}
-                </p>
               </div>
 
-              <div className="pt-3 border-t border-stone-100 flex items-center justify-between">
-                <Link href={`/destinations/${dest.slug}`} className="text-xs font-semibold text-brand-charcoal-900 hover:text-brand-maroon">
-                  Explore {dest.shortName} →
-                </Link>
-                <Link href={`/routes/${dest.routeSlug}`}>
-                  <Button size="sm" variant="primary" className="text-xs">
-                    Shirdi to {dest.shortName} Cab
-                  </Button>
-                </Link>
+              <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-2">
+                  <div className="text-xs text-stone-500 font-medium flex items-center gap-2">
+                    <MapPin className="w-3.5 h-3.5 text-brand-maroon shrink-0" />
+                    <span>{dest.approxDistanceKmText}</span>
+                  </div>
+
+                  <p className="text-xs text-stone-600 leading-relaxed line-clamp-2">
+                    {dest.shortDescription}
+                  </p>
+                </div>
+
+                <div className="pt-3 border-t border-stone-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/destinations/${dest.slug}`}
+                    className="text-xs font-semibold text-stone-600 hover:text-brand-maroon transition-colors"
+                  >
+                    Guide →
+                  </Link>
+
+                  <Link
+                    href={`/routes/${dest.routeSlug}`}
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-maroon-50 text-brand-maroon hover:bg-brand-maroon hover:text-white text-xs font-bold transition-colors"
+                  >
+                    <span>Shirdi to {dest.shortName} Cab</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
           ))}

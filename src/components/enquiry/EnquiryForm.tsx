@@ -520,8 +520,13 @@ export function EnquiryForm({
                 placeholder="e.g. 96895 41883"
                 value={whatsappNumber}
                 onChange={(e) => setWhatsappNumber(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm text-brand-charcoal-900 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon"
+                className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm text-brand-charcoal-900 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon ${
+                  fieldErrors.whatsappNumber ? "border-rose-400 bg-rose-50/20" : "border-stone-200"
+                }`}
               />
+              {fieldErrors.whatsappNumber && (
+                <p className="text-[11px] text-rose-600">{fieldErrors.whatsappNumber}</p>
+              )}
             </div>
           )}
         </div>
@@ -537,8 +542,13 @@ export function EnquiryForm({
             placeholder="e.g. rajesh@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs sm:text-sm text-brand-charcoal-900 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon"
+            className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm text-brand-charcoal-900 bg-white placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon ${
+              fieldErrors.email ? "border-rose-400 bg-rose-50/20" : "border-stone-200"
+            }`}
           />
+          {fieldErrors.email && (
+            <p className="text-[11px] text-rose-600">{fieldErrors.email}</p>
+          )}
         </div>
       </div>
 

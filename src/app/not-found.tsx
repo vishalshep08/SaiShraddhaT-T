@@ -28,7 +28,7 @@ export default function NotFound() {
     { title: "Shirdi to Shani Shingnapur", href: "/routes/shirdi-to-shani-shingnapur" },
     { title: "Shirdi to Mumbai Outstation", href: "/routes/shirdi-to-mumbai" },
     { title: "Shirdi to Pune Taxi", href: "/routes/shirdi-to-pune" },
-    { title: "Shirdi Airport (SAG) Drop", href: "/services/shirdi-airport-transfers" },
+    { title: "Shirdi Airport (SAG) Drop", href: "/services/airport-transfer" },
   ];
 
   return (

@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import {
@@ -14,17 +15,20 @@ import {
   Navigation,
   Car,
   Users,
+  IndianRupee,
 } from "lucide-react";
 import { ROUTES_DATA } from "@/data/routesData";
 import { DESTINATIONS_DATA } from "@/data/destinationsData";
 import { SERVICES_DATA } from "@/data/servicesData";
 import { BUSINESS_CONFIG } from "@/lib/constants";
-import { buildWhatsAppLink, buildPhoneLink } from "@/lib/utils";
+import { buildWhatsAppLink, buildPhoneLink, formatINR } from "@/lib/utils";
 import { constructMetadata } from "@/lib/seo";
 import { ServiceFAQ } from "@/components/services/ServiceFAQ";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { InlineQuoteForm } from "@/components/enquiry/InlineQuoteForm";
+import { PlacesCoveredSection } from "@/components/destinations/PlacesCoveredSection";
+import { DestinationGallerySection } from "@/components/destinations/DestinationGallerySection";
 
 interface RoutePageProps {
   params: {
@@ -67,17 +71,38 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
 
   const ramesh = BUSINESS_CONFIG.contacts[0];
 
-  // Destination context
+  // Destination context & fallback media
   const destination = DESTINATIONS_DATA.find((d) => d.slug === route.destinationSlug);
+  const heroImageUrl = destination?.imageUrl || route.imageUrl || "/images/destinations/fallback-destination.jpg";
+  const heroImageAlt = destination?.imageAlt || route.imageAlt || `${route.destinationName} travel destination`;
+  const startingFare = destination?.startingFare || route.startingFare;
+
+  // Places covered
+  const places =
+    destination?.placesCovered && destination.placesCovered.length > 0
+      ? destination.placesCovered
+      : route.keyStopsAlongRoute.map((stop) => ({
+          name: stop,
+          description: `Popular visit stop along the ${route.origin} to ${route.destinationName} taxi route.`,
+        }));
+
+  // Gallery images
+  const galleryImages =
+    destination?.galleryImages && destination.galleryImages.length > 0
+      ? destination.galleryImages
+      : [
+          {
+            url: heroImageUrl,
+            alt: heroImageAlt,
+            title: route.destinationName,
+          },
+        ];
 
   // Related routes
   const relatedRoutes = ROUTES_DATA.filter((r) => route.relatedRouteSlugs.includes(r.slug));
 
-  // Related services
-  const relatedServices = SERVICES_DATA.filter((s) => route.relatedServiceSlugs.includes(s.slug));
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       {/* 1. Breadcrumb Navigation */}
       <nav
         aria-label="Breadcrumb"
@@ -91,89 +116,141 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
           Taxi Routes
         </Link>
         <ChevronRight className="w-3.5 h-3.5 text-stone-400" />
-        <span className="font-semibold text-brand-charcoal-900">{route.origin} to {route.destinationName} Taxi</span>
+        <span className="font-semibold text-brand-charcoal-900">
+          {route.origin} to {route.destinationName}
+        </span>
       </nav>
 
-      {/* 2. Route Hero Section */}
-      <section className="bg-white rounded-2xl p-6 sm:p-10 border border-stone-200 shadow-sm space-y-6">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="maroon" size="sm">
-            {route.origin} → {route.destinationName}
-          </Badge>
-          <span className="text-xs text-stone-500 font-medium">
-            • {route.approxDistanceKmText} • Approx. {route.approxDurationText}
-          </span>
-        </div>
+      {/* 2. Image-First Route Hero Section */}
+      <section className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm">
+        {/* Large Hero Banner Image */}
+        <div className="relative aspect-video sm:aspect-21/9 w-full overflow-hidden bg-stone-900">
+          <Image
+            src={heroImageUrl}
+            alt={heroImageAlt}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 95vw, 1200px"
+            priority
+            className="object-cover"
+          />
+          {/* Subtle Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/20" />
 
-        <div className="space-y-3 max-w-4xl">
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-brand-charcoal-900 tracking-tight leading-tight">
-            {route.headline}
-          </h1>
-          <p className="text-base sm:text-lg text-stone-600 leading-relaxed">
-            {route.shortDescription}
-          </p>
-        </div>
+          {/* Top Overlays */}
+          <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2">
+            <Badge variant="saffron" size="sm" className="shadow-md">
+              {route.origin} → {route.destinationName}
+            </Badge>
 
-        {/* Route Details Bar */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-stone-700 bg-stone-50 p-4 rounded-xl border border-stone-200/80">
-          <div className="space-y-0.5">
-            <span className="text-[10px] uppercase font-bold text-stone-400 block">Distance</span>
-            <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
-              <MapPin className="w-4 h-4 text-brand-maroon shrink-0" />
-              <span>{route.approxDistanceKmText}</span>
-            </div>
+            {startingFare && (
+              <span className="text-xs sm:text-sm font-extrabold text-brand-charcoal-900 bg-white/95 backdrop-blur-xs px-3 py-1 rounded-full shadow-md">
+                From {formatINR(startingFare)}*
+              </span>
+            )}
           </div>
 
-          <div className="space-y-0.5">
-            <span className="text-[10px] uppercase font-bold text-stone-400 block">Approx. Driving Time</span>
-            <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
-              <Clock className="w-4 h-4 text-brand-maroon shrink-0" />
-              <span>{route.approxDurationText}</span>
-            </div>
-          </div>
-
-          <div className="space-y-0.5">
-            <span className="text-[10px] uppercase font-bold text-stone-400 block">Highway Route</span>
-            <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
-              <Navigation className="w-4 h-4 text-brand-maroon shrink-0" />
-              <span className="truncate">{route.highwayRoute}</span>
-            </div>
+          {/* Bottom Banner Title */}
+          <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-8 right-4 sm:right-8 text-white space-y-1">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight drop-shadow-md">
+              {route.headline}
+            </h1>
+            <p className="text-xs sm:text-sm text-stone-200 line-clamp-2 max-w-3xl drop-shadow-sm">
+              {route.shortDescription}
+            </p>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="pt-2 flex flex-wrap items-center gap-3">
-          <a
-            href={buildWhatsAppLink({
-              pickup: route.origin,
-              drop: route.destinationName,
-              customMessage: `Hello ${BUSINESS_CONFIG.name}, I would like to enquire about a taxi from ${route.origin} to ${route.destinationName}. Please share vehicle availability and quotation.`,
-            })}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Button
-              size="lg"
-              variant="primary"
-              leftIcon={<MessageSquare className="w-4 h-4 text-emerald-300" />}
+        {/* Hero Details & Instant Conversion Bar */}
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Compact Route Metrics Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs bg-stone-50 p-4 rounded-xl border border-stone-200/80">
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Distance</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <MapPin className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span>{route.approxDistanceKmText}</span>
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Approx. Travel Time</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Clock className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span>{route.approxDurationText}</span>
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Highway Route</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Navigation className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span className="truncate">{route.highwayRoute}</span>
+              </div>
+            </div>
+
+            <div className="space-y-0.5">
+              <span className="text-[10px] uppercase font-bold text-stone-400 block">Owned Fleet</span>
+              <div className="flex items-center gap-1.5 font-bold text-brand-charcoal-900">
+                <Car className="w-4 h-4 text-brand-maroon shrink-0" />
+                <span className="truncate">Ertiga & Tavera AC</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Immediate High-Converting CTAs */}
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <a
+              href={buildWhatsAppLink({
+                pickup: route.origin,
+                drop: route.destinationName,
+                customMessage: `Hello Ramesh Shep, I would like to book a cab from ${route.origin} to ${route.destinationName}. Please share availability and best quote.`,
+              })}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="grow sm:grow-0"
             >
-              Get Quote on WhatsApp
-            </Button>
-          </a>
+              <Button
+                size="lg"
+                variant="primary"
+                className="w-full sm:w-auto"
+                leftIcon={<MessageSquare className="w-4 h-4 text-emerald-300" />}
+              >
+                Get Instant Quote on WhatsApp
+              </Button>
+            </a>
 
-          <a href={buildPhoneLink(ramesh.primaryPhoneRaw)}>
-            <Button size="lg" variant="outline" leftIcon={<Phone className="w-4 h-4 text-brand-maroon" />}>
-              Call Ramesh Shep (Owner): {ramesh.primaryPhone}
-            </Button>
-          </a>
+            <a href={buildPhoneLink(ramesh.primaryPhoneRaw)} className="grow sm:grow-0">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full sm:w-auto"
+                leftIcon={<Phone className="w-4 h-4 text-brand-maroon" />}
+              >
+                Call Ramesh Shep (Owner): {ramesh.primaryPhone}
+              </Button>
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* 3. Detailed Route Information */}
+      {/* 3. Visual "Places You Can Visit on This Trip" Cards */}
+      <PlacesCoveredSection
+        places={places}
+        title={`Key Places to Visit: ${route.origin} to ${route.destinationName}`}
+        subtitle="Enjoy a relaxed pilgrimage or holiday. Your private cab waits at each attraction without rush."
+      />
+
+      {/* 4. Destination Photo Gallery with Lightbox */}
+      <DestinationGallerySection
+        images={galleryImages}
+        destinationName={route.destinationName}
+      />
+
+      {/* 5. Detailed Route Information (Preserved Full SEO Content) */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-8">
           {/* Overview */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
             <h2 className="text-2xl font-bold text-brand-charcoal-900">
               About the {route.origin} to {route.destinationName} Cab Journey
             </h2>
@@ -183,7 +260,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
 
             {/* Trip Types Supported */}
             <div className="pt-4 border-t border-stone-100 space-y-2">
-              <h3 className="text-sm font-bold uppercase tracking-wider text-brand-charcoal-900">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-charcoal-900">
                 Trip Options Available
               </h3>
               <div className="flex flex-wrap gap-2 pt-1">
@@ -199,25 +276,12 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
             </div>
           </div>
 
-          {/* Key Stops & Attractions along the route */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-4">
-            <h3 className="text-xl font-bold text-brand-charcoal-900">
-              Popular Stops & Sightseeing on This Route
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              {route.keyStopsAlongRoute.map((stop, i) => (
-                <div key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-stone-700 bg-stone-50 p-3 rounded-lg border border-stone-100">
-                  <CheckCircle2 className="w-4 h-4 text-brand-maroon shrink-0 mt-0.5" />
-                  <span>{stop}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Vehicle Recommendation Matrix for this Route */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-5">
+          {/* Vehicle Recommendation Matrix */}
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs space-y-5">
             <div>
-              <Badge variant="maroon" size="sm" className="mb-1.5">Vehicle Recommendation</Badge>
+              <Badge variant="maroon" size="sm" className="mb-1.5">
+                Vehicle Recommendation
+              </Badge>
               <h3 className="text-xl font-bold text-brand-charcoal-900">
                 Recommended Vehicle by Group Size
               </h3>
@@ -264,7 +328,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
           </div>
 
           {/* FAQs */}
-          <div className="bg-white rounded-xl p-6 sm:p-8 border border-stone-200 shadow-xs">
+          <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs">
             <ServiceFAQ faqs={route.faqs} title={`${route.destinationName} Taxi FAQ`} />
           </div>
         </div>
@@ -273,8 +337,8 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
         <div className="lg:col-span-4 space-y-6">
           {/* Destination Bridge Link */}
           {destination && (
-            <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-xs space-y-3">
-              <h4 className="text-sm font-bold text-brand-charcoal-900 uppercase tracking-wider text-stone-500">
+            <div className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-3">
+              <h4 className="text-xs font-bold text-stone-500 uppercase tracking-wider">
                 Destination Information
               </h4>
               <h3 className="text-lg font-bold text-brand-charcoal-900">
@@ -295,7 +359,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
           )}
 
           {/* Direct Shirdi Desk Contact Box */}
-          <div className="bg-brand-maroon text-white rounded-xl p-6 border border-brand-maroon-800 space-y-4 shadow-md">
+          <div className="bg-brand-maroon text-white rounded-2xl p-6 border border-brand-maroon-800 space-y-4 shadow-md">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-brand-saffron-300" />
               <h4 className="font-bold text-base">Direct Shirdi Cab Desk</h4>
@@ -309,7 +373,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
                 href={buildPhoneLink(ramesh.primaryPhoneRaw)}
                 className="flex items-center justify-between p-2.5 rounded-lg bg-brand-maroon-800/80 border border-brand-maroon-700 hover:bg-brand-maroon-800"
               >
-                <span>Call Ramesh Shep (Owner):</span>
+                <span>Call Ramesh Shep:</span>
                 <span className="font-bold font-mono text-brand-saffron-200">{ramesh.primaryPhone}</span>
               </a>
             </div>
@@ -331,9 +395,9 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
         </div>
       </section>
 
-      {/* 4. Related Routes Internal Links */}
+      {/* 6. Related Routes Internal Links */}
       {relatedRoutes.length > 0 && (
-        <section className="space-y-4 pt-6 border-t border-stone-200">
+        <section className="space-y-4 pt-4 border-t border-stone-200">
           <h3 className="text-xl font-bold text-brand-charcoal-900">
             Other Popular Routes From Shirdi
           </h3>
@@ -362,7 +426,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
         </section>
       )}
 
-      {/* 5. Final CTA — Embedded Quote Form */}
+      {/* 7. Final CTA — Embedded Quote Form */}
       <section className="bg-white rounded-2xl p-6 sm:p-10 border border-stone-200 shadow-sm space-y-6 max-w-4xl mx-auto">
         <div className="space-y-1 border-b border-stone-100 pb-4">
           <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-maroon-50 border border-brand-maroon-200 text-brand-maroon text-xs font-semibold">
@@ -373,7 +437,7 @@ export default function RouteDetailPage({ params }: RoutePageProps) {
             Request a Quote for {route.origin} → {route.destinationName}
           </h2>
           <p className="text-sm text-stone-600 leading-relaxed">
-            Share your travel date and passenger count. Ramesh Shep (Owner) will confirm your vehicle availability and fare promptly.
+            Share your travel date and passenger count. Ramesh Shep (Owner) will confirm vehicle availability and fare promptly.
           </p>
         </div>
 

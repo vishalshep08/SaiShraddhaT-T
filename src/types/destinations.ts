@@ -18,6 +18,19 @@ export interface DestinationItem {
   faqs: { question: string; answer: string }[];
   seoTitle: string;
   seoDescription: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  startingFare?: number;
+  placesCovered?: {
+    name: string;
+    description: string;
+    image?: string;
+  }[];
+  galleryImages?: {
+    url: string;
+    alt: string;
+    title?: string;
+  }[];
 }
 
 export interface RouteItem {
@@ -46,6 +59,9 @@ export interface RouteItem {
   relatedServiceSlugs: string[];
   seoTitle: string;
   seoDescription: string;
+  imageUrl?: string;
+  imageAlt?: string;
+  startingFare?: number;
 }
 
 export interface TourPackageItem {

@@ -28,6 +28,21 @@ function isValidIndianMobile(phone: string): boolean {
 }
 
 /**
+ * Validate standard email format
+ */
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
+ * Sanitize user input strings to prevent markup injection
+ */
+function sanitizeInput(str?: string): string {
+  if (!str) return "";
+  return str.replace(/[<>]/g, "").trim();
+}
+
+/**
  * Server Action: Submit Customer Enquiry / Quote / Booking Request
  */
 export async function submitEnquiryAction(
@@ -46,8 +61,8 @@ export async function submitEnquiryAction(
       };
     }
 
-    // 2. Customer Name Validation
-    const name = formData.customerName?.trim() || "";
+    // 2. Customer Name Validation & Sanitization
+    const name = sanitizeInput(formData.customerName);
     if (!name || name.length < 2) {
       fieldErrors.customerName = "Please enter your name (at least 2 characters).";
     } else if (name.length > 100) {
@@ -62,14 +77,36 @@ export async function submitEnquiryAction(
       fieldErrors.mobileNumber = "Please enter a valid 10-digit mobile number.";
     }
 
-    // 4. Pickup Location & Destination Validation
-    const pickup = formData.pickupLocation?.trim() || "Shirdi";
-    const destination = formData.destination?.trim() || "";
+    // 3b. WhatsApp Number Validation (if distinct from mobile)
+    if (!formData.sameAsMobile && formData.whatsappNumber && formData.whatsappNumber.trim()) {
+      const wa = formData.whatsappNumber.trim();
+      if (!isValidIndianMobile(wa)) {
+        fieldErrors.whatsappNumber = "Please enter a valid 10-digit WhatsApp number.";
+      }
+    }
+
+    // 3c. Optional Email Validation
+    if (formData.email && formData.email.trim().length > 0) {
+      const em = formData.email.trim();
+      if (!isValidEmail(em)) {
+        fieldErrors.email = "Please enter a valid email address.";
+      } else if (em.length > 100) {
+        fieldErrors.email = "Email is too long (maximum 100 characters).";
+      }
+    }
+
+    // 4. Pickup Location & Destination Validation & Sanitization
+    const pickup = sanitizeInput(formData.pickupLocation) || "Shirdi";
+    const destination = sanitizeInput(formData.destination);
     if (!pickup) {
       fieldErrors.pickupLocation = "Please specify your pickup location.";
+    } else if (pickup.length > 200) {
+      fieldErrors.pickupLocation = "Pickup location is too long (maximum 200 characters).";
     }
     if (!destination) {
       fieldErrors.destination = "Please specify your destination or tour.";
+    } else if (destination.length > 200) {
+      fieldErrors.destination = "Destination is too long (maximum 200 characters).";
     }
 
     // 5. Passenger Count Validation
@@ -142,12 +179,12 @@ export async function submitEnquiryAction(
       trip_type: formData.tripType || "one_way",
       travel_date: formData.travelDate || null,
       return_date: formData.returnDate || null,
-      pickup_time: formData.pickupTime?.trim() || null,
+      pickup_time: sanitizeInput(formData.pickupTime)?.slice(0, 100) || null,
       passenger_count: passengers,
       children_count: Number(formData.childrenCount) || 0,
       vehicle_category_slug: formData.vehicleCategorySlug || null,
       vehicle_preference_text: vehiclePreferenceText,
-      additional_requirements: formData.additionalRequirements?.trim()?.slice(0, 1500) || null,
+      additional_requirements: sanitizeInput(formData.additionalRequirements)?.slice(0, 1500) || null,
       request_intent: formData.requestIntent || "quote",
       enquiry_type: formData.enquiryType || "general",
       source_page: formData.sourcePage?.slice(0, 255) || "direct_quote_form",

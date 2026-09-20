@@ -51,13 +51,31 @@ export function Footer({ logoUrl }: FooterProps) {
               Our Services
             </h4>
             <ul className="space-y-2 text-xs">
-              {CORE_SERVICES.map((s) => (
-                <li key={s.slug}>
-                  <Link href={`/services#${s.slug}`} className="hover:text-brand-saffron-300 transition-colors">
-                    {s.title}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link href="/services/shirdi-local-taxi" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi Local Taxi & Sightseeing
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/outstation-taxi" className="hover:text-brand-saffron-300 transition-colors">
+                  Outstation Cab Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/airport-transfer" className="hover:text-brand-saffron-300 transition-colors">
+                  Airport & Railway Transfers
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/pilgrimage-tours" className="hover:text-brand-saffron-300 transition-colors">
+                  Pilgrimage & Darshan Tours
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="hover:text-brand-saffron-300 font-semibold transition-colors">
+                  View All Services →
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -67,15 +85,33 @@ export function Footer({ logoUrl }: FooterProps) {
               Popular Routes
             </h4>
             <ul className="space-y-2 text-xs">
-              {POPULAR_DESTINATIONS.slice(0, 5).map((d) => (
-                <li key={d.slug}>
-                  <Link href={`/destinations#${d.slug}`} className="hover:text-brand-saffron-300 transition-colors">
-                    {d.name}
-                  </Link>
-                </li>
-              ))}
               <li>
-                <Link href="/services#airport-railway-transfers" className="hover:text-brand-saffron-300 transition-colors">
+                <Link href="/routes/shirdi-to-shani-shingnapur" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi to Shani Shingnapur
+                </Link>
+              </li>
+              <li>
+                <Link href="/routes/shirdi-to-trimbakeshwar" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi to Nashik & Trimbakeshwar
+                </Link>
+              </li>
+              <li>
+                <Link href="/routes/shirdi-to-ellora-caves" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi to Ellora & Grishneshwar
+                </Link>
+              </li>
+              <li>
+                <Link href="/routes/shirdi-to-pune" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi to Pune (City & Airport)
+                </Link>
+              </li>
+              <li>
+                <Link href="/routes/shirdi-to-mumbai" className="hover:text-brand-saffron-300 transition-colors">
+                  Shirdi to Mumbai (Expressway)
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/airport-transfer" className="hover:text-brand-saffron-300 transition-colors">
                   Shirdi Airport (SAG) Drop
                 </Link>
               </li>

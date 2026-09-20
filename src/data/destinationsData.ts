@@ -14,6 +14,48 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Nashik is one of the most revered spiritual centers in Maharashtra, situated along the sacred Godavari River. For pilgrims visiting Shirdi, Nashik is the natural spiritual companion destination, hosting Muktidham temple, the Panchavati holy grounds where Lord Rama resided, Sita Gufa, Kalaram and Goraram temples, and the sacred Ramkund ghat.",
     whyVisitFromShirdi:
       "Located just a comfortable drive from Shirdi, most devotees combine their Shirdi Sai Baba darshan with a holy day-tour to Nashik and Trimbakeshwar Jyotirlinga.",
+    imageUrl: "/images/destinations/nashik.jpg",
+    imageAlt: "Nashik Panchavati ghats on Godavari river",
+    startingFare: 2600,
+    placesCovered: [
+      {
+        name: "Panchavati & Sita Gufa",
+        description: "Sacred grounds where Lord Rama and Sita resided during exile with ancient banyan trees.",
+      },
+      {
+        name: "Kalaram Mandir",
+        description: "Architecturally celebrated black-stone Rama temple built in 1788 with 14 steps.",
+      },
+      {
+        name: "Muktidham Marble Temple",
+        description: "Magnificent white Makrana marble temple complex with replicas of 12 Jyotirlingas.",
+      },
+      {
+        name: "Ramkund Ghat",
+        description: "Sacred holy dip kund on the Godavari river where Kumbh Mela rituals take place.",
+      },
+      {
+        name: "Kapaleshwar Mahadev Temple",
+        description: "Unique Shiva temple facing Godavari where Nandi is notably absent.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/nashik.jpg",
+        alt: "Panchavati Ghats on Godavari river",
+        title: "Panchavati & Godavari River",
+      },
+      {
+        url: "/images/destinations/trimbakeshwar.jpg",
+        alt: "Trimbakeshwar Temple nearby",
+        title: "Trimbakeshwar Temple",
+      },
+      {
+        url: "/images/destinations/vani-saptashrungi.jpg",
+        alt: "Saptashrungi Devi nearby",
+        title: "Saptashrungi Devi",
+      },
+    ],
     keyAttractions: [
       "Muktidham Marble Temple Complex",
       "Panchavati & Sacred Banyan Trees",
@@ -53,6 +95,44 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Trimbakeshwar is an ancient pilgrimage town located 28 km beyond Nashik city at the base of the sacred Brahmagiri hills, the source of the Godavari River. The Trimbakeshwar Temple enshrines a unique three-faced Jyotirlinga representing Brahma, Vishnu, and Shiva, alongside the sacred Kushavarta Tirtha kund.",
     whyVisitFromShirdi:
       "Trimbakeshwar is one of the most auspicious Shiva shrines in India. Travelling by private taxi from Shirdi allows devotees to reach for early darshan and complete their rituals with peaceful pacing.",
+    imageUrl: "/images/destinations/trimbakeshwar.jpg",
+    imageAlt: "Trimbakeshwar Jyotirlinga Temple at Brahmagiri foothills",
+    startingFare: 2600,
+    placesCovered: [
+      {
+        name: "Trimbakeshwar Jyotirlinga Temple",
+        description: "Ancient black-stone shrine housing the unique three-faced lingam of Brahma, Vishnu, and Shiva.",
+      },
+      {
+        name: "Kushavarta Holy Kund",
+        description: "Sacred water tank revered as the symbolic origin point of the holy Godavari River.",
+      },
+      {
+        name: "Brahmagiri Hill Foothills",
+        description: "Majestic spiritual mountain landscape providing a serene backdrop for prayers.",
+      },
+      {
+        name: "Sant Nivruttinath Samadhi",
+        description: "Holy samadhi shrine of Saint Nivruttinath, elder brother and guru of Saint Dnyaneshwar.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/trimbakeshwar.jpg",
+        alt: "Trimbakeshwar Jyotirlinga Temple",
+        title: "Trimbakeshwar Jyotirlinga",
+      },
+      {
+        url: "/images/destinations/nashik.jpg",
+        alt: "Panchavati River Ghats",
+        title: "Panchavati River Ghats",
+      },
+      {
+        url: "/images/destinations/vani-saptashrungi.jpg",
+        alt: "Saptashrungi Devi nearby",
+        title: "Saptashrungi Devi",
+      },
+    ],
     keyAttractions: [
       "Trimbakeshwar Jyotirlinga Temple",
       "Kushavarta Holy Water Kund (Source of Godavari)",
@@ -90,6 +170,35 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Shani Shingnapur is a legendary pilgrimage center situated in Ahmednagar district. Devotees from across the globe visit to offer mustard oil (Telabhishekam) to the black stone Swayambhu pillar of Lord Shani. The village is also famous for its unbroken tradition where houses have no front doors or locks.",
     whyVisitFromShirdi:
       "Shani Shingnapur is located approximately 72 km from Shirdi. Over 90% of devotees visiting Shirdi Sai Baba also complete their pilgrimage by taking a half-day round-trip cab to Shani Shingnapur.",
+    imageUrl: "/images/destinations/shani-shingnapur.jpg",
+    imageAlt: "Shani Shingnapur Swayambhu black stone idol and temple sanctum",
+    startingFare: 1800,
+    placesCovered: [
+      {
+        name: "Shri Shaneshwar Devasthan",
+        description: "Open-air marble platform featuring the 5.5-foot Swayambhu black stone idol of Lord Shani.",
+      },
+      {
+        name: "Doorless Village",
+        description: "Remarkable village where homes, shops, and post offices have stood without doors or locks for centuries.",
+      },
+      {
+        name: "Sugarcane Jaggery Mills",
+        description: "Fresh countryside sugarcane juice and traditional jaggery (gur) stalls lining the scenic route.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/shani-shingnapur.jpg",
+        alt: "Shani Shingnapur Devasthan",
+        title: "Shani Devasthan Platform",
+      },
+      {
+        url: "/images/destinations/nashik.jpg",
+        alt: "Pilgrimage Route",
+        title: "Pilgrimage Countryside",
+      },
+    ],
     keyAttractions: [
       "Shri Shaneshwar Devasthan (Open-Air Sanctum)",
       "Swayambhu Black Stone Shani Murti",
@@ -127,6 +236,44 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Aurangabad (Chhatrapati Sambhajinagar) is a magnificent historic city celebrated for its medieval heritage, silk weaving, and UNESCO world-wonder monuments. It serves as the base for visiting Grishneshwar Jyotirlinga, Ellora Caves, and Ajanta Caves.",
     whyVisitFromShirdi:
       "Accessible in just 2.5 hours from Shirdi via smooth highways, Aurangabad makes for an incredible spiritual and historical day-trip or 2-day excursion.",
+    imageUrl: "/images/destinations/aurangabad.jpg",
+    imageAlt: "Bibi Ka Maqbara white marble architecture in Aurangabad",
+    startingFare: 3200,
+    placesCovered: [
+      {
+        name: "Bibi Ka Maqbara",
+        description: "17th-century white marble mausoleum known as the 'Taj of the Deccan' with landscaped Mughal gardens.",
+      },
+      {
+        name: "Daulatabad Fortress",
+        description: "Formidable medieval hilltop fort featuring subterranean dark labyrinths and the Chand Minar.",
+      },
+      {
+        name: "Panchakki",
+        description: "Historic 17th-century water mill driven by underground water channels from mountain springs.",
+      },
+      {
+        name: "Himroo & Paithani Silk Weaving",
+        description: "Traditional heritage workshops preserving authentic Persian-Indian silk weaving techniques.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/aurangabad.jpg",
+        alt: "Bibi Ka Maqbara",
+        title: "Bibi Ka Maqbara",
+      },
+      {
+        url: "/images/destinations/ellora-caves.jpg",
+        alt: "Kailash Temple Ellora",
+        title: "Kailash Temple nearby",
+      },
+      {
+        url: "/images/destinations/grishneshwar.jpg",
+        alt: "Grishneshwar Temple",
+        title: "Grishneshwar Jyotirlinga",
+      },
+    ],
     keyAttractions: [
       "Bibi Ka Maqbara (The Taj of the Deccan)",
       "Daulatabad Fortress & Chand Minar",
@@ -160,6 +307,44 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Ellora features 34 monumental rock-cut cave temples spanning Buddhist, Hindu, and Jain traditions carved between the 6th and 10th centuries. Just 1 km from Ellora sits the red-stone Grishneshwar Temple, the 12th and final Jyotirlinga of Lord Shiva, and the nearby sleeping Hanuman shrine at Bhadra Maruti in Khuldabad.",
     whyVisitFromShirdi:
       "This circuit combines world-class rock-cut archaeology with the sacred darshan of the 12th Jyotirlinga in a single day trip from Shirdi.",
+    imageUrl: "/images/destinations/ellora-caves.jpg",
+    imageAlt: "Kailash Temple Cave 16 monolithic rock architecture at Ellora",
+    startingFare: 2800,
+    placesCovered: [
+      {
+        name: "Kailash Temple (Cave 16)",
+        description: "World's largest monolithic rock-cut structure, carved vertically downwards from a single basalt cliff.",
+      },
+      {
+        name: "Grishneshwar Jyotirlinga",
+        description: "The sacred 12th and final Jyotirlinga temple built with red basalt stone, just 1 km from the caves.",
+      },
+      {
+        name: "Bhadra Maruti Temple",
+        description: "Rare and auspicious sleeping posture (bhavishya mudra) Hanuman idol located in Khuldabad.",
+      },
+      {
+        name: "Buddhist & Jain Caves",
+        description: "Extensive multi-faith cave clusters demonstrating centuries of peaceful coexistence.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/ellora-caves.jpg",
+        alt: "Kailash Temple Ellora",
+        title: "Kailash Temple Monolith",
+      },
+      {
+        url: "/images/destinations/grishneshwar.jpg",
+        alt: "Grishneshwar Jyotirlinga Temple",
+        title: "Grishneshwar Jyotirlinga",
+      },
+      {
+        url: "/images/destinations/aurangabad.jpg",
+        alt: "Bibi Ka Maqbara Aurangabad",
+        title: "Aurangabad Heritage",
+      },
+    ],
     keyAttractions: [
       "Kailash Temple (Cave 16 - World's Largest Monolithic Rock Excavation)",
       "Grishneshwar Jyotirlinga Temple",
@@ -193,6 +378,40 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Ajanta Caves comprise 30 rock-cut Buddhist cave monuments dating from the 2nd century BCE to about 480 CE. Set in a secluded horseshoe-shaped gorge, they represent the pinnacle of ancient Indian mural painting and classical Buddhist art.",
     whyVisitFromShirdi:
       "A dedicated full-day excursion from Shirdi for heritage enthusiasts, international travellers, and families wishing to see India's finest classical art treasures.",
+    imageUrl: "/images/destinations/ajanta-caves.jpg",
+    imageAlt: "Ajanta Caves horseshoe gorge panoramic view",
+    startingFare: 4800,
+    placesCovered: [
+      {
+        name: "Cave 1 & 2 Masterpiece Frescoes",
+        description: "Incomparable murals of Bodhisattva Padmapani and Vajrapani painted with natural mineral pigments.",
+      },
+      {
+        name: "Cave 26 Chaitya & Reclining Buddha",
+        description: "Monumental arched prayer hall featuring the iconic 7-meter reclining Mahaparinirvana sculpture.",
+      },
+      {
+        name: "Horseshoe Gorge Viewpoint",
+        description: "Panoramic clifftop observation deck overlooking the cascading Waghur river waterfalls.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/ajanta-caves.jpg",
+        alt: "Ajanta Caves Gorge",
+        title: "Ajanta Horseshoe Gorge",
+      },
+      {
+        url: "/images/destinations/ellora-caves.jpg",
+        alt: "Ellora Kailash Comparison",
+        title: "Rock-cut Art Comparison",
+      },
+      {
+        url: "/images/destinations/aurangabad.jpg",
+        alt: "Aurangabad Monuments",
+        title: "Aurangabad Gateway",
+      },
+    ],
     keyAttractions: [
       "Cave 1 & 2 Masterpiece Murals (Bodhisattva Padmapani)",
       "Cave 26 Chaitya & Reclining Buddha Statue",
@@ -225,6 +444,39 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Pune is a major gateway for devotees travelling to Shirdi from Karnataka, Andhra Pradesh, Telangana, Tamil Nadu, and Western India. We provide direct doorstep cab drops to Pune City, Lohegaon Airport (PNQ), Pune Railway Station, and IT parks in Hinjawadi, Magarpatta, and Kharadi.",
     whyVisitFromShirdi:
       "A fast, direct highway cab allows comfortable transit without the hassle of crowded train schedules or changing buses with family luggage.",
+    imageUrl: "/images/destinations/pune.jpg",
+    imageAlt: "Pune Shaniwar Wada and city skyline",
+    startingFare: 3800,
+    placesCovered: [
+      {
+        name: "Pune Airport (PNQ) & Junction Station",
+        description: "Seamless door-to-door transfer directly to airport departure gates or railway platforms.",
+      },
+      {
+        name: "Dagdusheth Halwai Ganpati Temple",
+        description: "One of the most visited and revered Ganesh temples in Maharashtra.",
+      },
+      {
+        name: "Shaniwar Wada & Aga Khan Palace",
+        description: "Historic 18th-century seat of the Peshwas and landmark national freedom monument.",
+      },
+      {
+        name: "Hinjawadi & Kharadi IT Parks",
+        description: "Direct business travel transfers to Hinjawadi, Kharadi, and Magarpatta tech centers.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/pune.jpg",
+        alt: "Pune City Landmark",
+        title: "Pune Skyline & Heritage",
+      },
+      {
+        url: "/images/destinations/mumbai.jpg",
+        alt: "Transit Corridor",
+        title: "Western Maharashtra Transit",
+      },
+    ],
     keyAttractions: [
       "Pune Airport (PNQ) & Pune Junction Railway Station",
       "Dagdusheth Halwai Ganpati Temple",
@@ -258,6 +510,39 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Thousands of families travel between Mumbai and Shirdi every week for weekend darshan. With the opening of the Hindu Hrudaysamrat Balasaheb Thackeray Maharashtra Samruddhi Mahamarg expressway, the drive between Shirdi and Mumbai has become remarkably fast, safe, and smooth.",
     whyVisitFromShirdi:
       "Direct highway cabs provide door-to-door pickup from your Shirdi stay and drops across Mumbai, Thane, Navi Mumbai, and Chhatrapati Shivaji Maharaj International Airport (BOM).",
+    imageUrl: "/images/destinations/mumbai.jpg",
+    imageAlt: "Gateway of India and Mumbai coastal harbour",
+    startingFare: 4500,
+    placesCovered: [
+      {
+        name: "Mumbai Airport (BOM T1 & T2)",
+        description: "Direct terminal drops for domestic and international departures via Samruddhi Mahamarg.",
+      },
+      {
+        name: "Siddhivinayak & Mahalaxmi Temples",
+        description: "Darshan at Mumbai's foremost revered shrines to complete your pilgrimage.",
+      },
+      {
+        name: "Gateway of India & Marine Drive",
+        description: "Historic waterfront monument and scenic Queen's Necklace promenade.",
+      },
+      {
+        name: "Thane, Navi Mumbai & Western Suburbs",
+        description: "Convenient drops to Borivali, Andheri, Dadar, Thane, Vashi, and Panvel.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/mumbai.jpg",
+        alt: "Gateway of India",
+        title: "Gateway of India & Harbour",
+      },
+      {
+        url: "/images/destinations/pune.jpg",
+        alt: "Western Corridor",
+        title: "Expressway Highway",
+      },
+    ],
     keyAttractions: [
       "Mumbai International Airport (CSMIA BOM Terminal 1 & 2)",
       "Siddhivinayak Temple & Mahalaxmi Temple",
@@ -295,6 +580,40 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Bhimashankar is one of the 12 sacred Jyotirlingas, situated in the scenic Sahyadri range of Western Maharashtra. Surrounded by dense forests and misty hills, the temple features ancient Nagara architectural craftsmanship.",
     whyVisitFromShirdi:
       "Devotees undertaking the Maharashtra Jyotirlinga circuit travel from Shirdi to Bhimashankar to seek Lord Shiva's divine blessings in the tranquil Western Ghats.",
+    imageUrl: "/images/destinations/bhimashankar.jpg",
+    imageAlt: "Bhimashankar ancient Jyotirlinga temple in misty hills",
+    startingFare: 3600,
+    placesCovered: [
+      {
+        name: "Bhimashankar Jyotirlinga Temple",
+        description: "13th-century Nagara-style stone temple housing the sacred Swayambhu Jyotirlinga.",
+      },
+      {
+        name: "Gupt Bhimashankar & Sakshi Vinayak",
+        description: "Serene nature walk to where the river Bhima emerges from underground rocks.",
+      },
+      {
+        name: "Bhimashankar Wildlife Sanctuary",
+        description: "Dense biodiversity hotspot in the Western Ghats home to Maharashtra's state animal, the Shekru.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/bhimashankar.jpg",
+        alt: "Bhimashankar Temple",
+        title: "Bhimashankar Jyotirlinga",
+      },
+      {
+        url: "/images/destinations/trimbakeshwar.jpg",
+        alt: "Trimbakeshwar Temple",
+        title: "Jyotirlinga Circuit",
+      },
+      {
+        url: "/images/destinations/grishneshwar.jpg",
+        alt: "Grishneshwar Temple",
+        title: "Grishneshwar Temple",
+      },
+    ],
     keyAttractions: [
       "Bhimashankar Ancient Jyotirlinga Temple",
       "Gupt Bhimashankar & Sakshi Vinayak",
@@ -328,6 +647,40 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Shree Saptashrungi Nivasini Devi Temple at Vani is one of the revered 51 Shaktipeeths and three-and-a-half Shaktipeeths of Maharashtra. The eighteen-armed deity is carved into a steep cliff face surrounded by seven mountain summits.",
     whyVisitFromShirdi:
       "Devotees frequently combine their Shirdi Sai Baba pilgrimage with a blessing at Saptashrungi Devi during Navratri or family darshan trips.",
+    imageUrl: "/images/destinations/vani-saptashrungi.jpg",
+    imageAlt: "Saptashrungi Devi cliff temple and ropeway in Vani",
+    startingFare: 3200,
+    placesCovered: [
+      {
+        name: "Saptashrungi Cliff Shrine",
+        description: "10-foot-tall, eighteen-armed idol of the Mother Goddess carved directly into sheer mountain rock.",
+      },
+      {
+        name: "Funicular Mountain Trolley Ropeway",
+        description: "Modern passenger ropeway offering effortless 3-minute ascent to the sanctum for senior devotees.",
+      },
+      {
+        name: "Seven Summits Viewpoint",
+        description: "Breathtaking panoramic scenery over the Sahyadri mountains and surrounding valley plains.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/vani-saptashrungi.jpg",
+        alt: "Vani Saptashrungi Temple",
+        title: "Saptashrungi Cliff Shrine",
+      },
+      {
+        url: "/images/destinations/trimbakeshwar.jpg",
+        alt: "Trimbakeshwar Temple",
+        title: "Nashik District Pilgrimage",
+      },
+      {
+        url: "/images/destinations/nashik.jpg",
+        alt: "Panchavati Ghats",
+        title: "Panchavati Ghats",
+      },
+    ],
     keyAttractions: [
       "Saptashrungi Devi 18-Armed Cliff Shrine",
       "Funicular Ropeway Trolley for Mountain Ascent",
@@ -360,6 +713,35 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Pandharpur is the premier spiritual destination for millions of devotees across Maharashtra and South India. The temple of Lord Vitthal (Vithoba) on the banks of the sacred Chandrabhaga river draws pilgrims seeking devotion, humility, and peace.",
     whyVisitFromShirdi:
       "Connecting two of Maharashtra's most beloved spiritual centers—Shirdi Sai Baba and Pandharpur Vitthal—in a custom family pilgrimage tour.",
+    imageUrl: "/images/destinations/pandharpur.jpg",
+    imageAlt: "Vitthal Rukmini Mandir and Chandrabhaga river in Pandharpur",
+    startingFare: 5500,
+    placesCovered: [
+      {
+        name: "Shri Vitthal Rukmini Mandir",
+        description: "Centuries-old stone sanctum where devotees touch the feet of Lord Vitthal in reverent charan sparsh.",
+      },
+      {
+        name: "Chandrabhaga Holy River Ghats",
+        description: "Crescent riverbanks where Varkari pilgrims gather to perform holy snan and sing abhangas.",
+      },
+      {
+        name: "Pundalik Maharaj Temple",
+        description: "Historic riverbed temple honouring the son whose filial devotion brought Lord Vitthal to Pandharpur.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/pandharpur.jpg",
+        alt: "Pandharpur Vitthal Temple",
+        title: "Vitthal Mandir & Chandrabhaga",
+      },
+      {
+        url: "/images/destinations/shani-shingnapur.jpg",
+        alt: "Shani Shingnapur",
+        title: "Pilgrimage Circuit",
+      },
+    ],
     keyAttractions: [
       "Shri Vitthal Rukmini Mandir",
       "Chandrabhaga Holy River Ghats",
@@ -392,6 +774,39 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Mahabaleshwar and adjacent Panchgani form the quintessential hill getaway of Maharashtra. Featuring stunning canyon view points, Venna Lake boating, ancient Mahabaleshwar Shiva temple, and strawberry orchards, it is ideal for extending a spiritual Shirdi holiday into a relaxing family vacation.",
     whyVisitFromShirdi:
       "Extend your Shirdi pilgrimage into a refreshing hill station tour across the Sahyadri mountains.",
+    imageUrl: "/images/destinations/mahabaleshwar.jpg",
+    imageAlt: "Mahabaleshwar scenic valley viewpoint and hills",
+    startingFare: 5800,
+    placesCovered: [
+      {
+        name: "Arthur's Seat & Valley Viewpoints",
+        description: "Dramatic sheer drop vantage point offering expansive panoramas of the Savitri river valley below.",
+      },
+      {
+        name: "Old Mahabaleshwar Shiva Temple",
+        description: "Ancient Hemadpanti stone temple and sacred Panchganga spring where five holy rivers originate.",
+      },
+      {
+        name: "Venna Lake & Strawberry Orchards",
+        description: "Pedal boating on tranquil lake waters surrounded by fresh strawberry farm trails.",
+      },
+      {
+        name: "Table Land in Panchgani",
+        description: "Asia's second largest volcanic mountain plateau with expansive mountain horizons.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/mahabaleshwar.jpg",
+        alt: "Mahabaleshwar Scenery",
+        title: "Sahyadri Valley View",
+      },
+      {
+        url: "/images/destinations/pune.jpg",
+        alt: "Pune Transit",
+        title: "Pune Route Connection",
+      },
+    ],
     keyAttractions: [
       "Arthur's Seat, Wilson Point & Elephant's Head Point",
       "Venna Lake Boating & Mapro Garden",
@@ -425,6 +840,39 @@ export const DESTINATIONS_DATA: DestinationItem[] = [
       "Lonavala and Khandala are twin hill stations perched on the Sahyadri ranges between Pune and Mumbai. Famed since our historical visiting cards for scenic Bhor Ghat passes, Tiger's Leap, Bhushi Dam, and rock-cut Karla Caves, they offer a pleasant scenic continuation from Shirdi towards Mumbai.",
     whyVisitFromShirdi:
       "Combine your Shirdi return journey to Mumbai with scenic stops in Lonavala and Khandala.",
+    imageUrl: "/images/destinations/lonavala-khandala.jpg",
+    imageAlt: "Lonavala and Khandala scenic Sahyadri mountain vistas",
+    startingFare: 4200,
+    placesCovered: [
+      {
+        name: "Tiger's Leap & Lion's Point",
+        description: "Spectacular 650-meter cliff-edge lookouts with cascading breeze and breathtaking valley views.",
+      },
+      {
+        name: "Karla & Bhaja Caves",
+        description: "2nd-century BCE Buddhist rock-cut monasteries featuring grandiose vaulted wooden arched halls.",
+      },
+      {
+        name: "Bhushi Dam & Waterfalls",
+        description: "Popular monsoon waterfall steps along the hilly slopes surrounded by lush greenery.",
+      },
+      {
+        name: "Lonavala Chikki Markets",
+        description: "Renowned traditional sweet markets offering crushed peanut and jaggery delicacies.",
+      },
+    ],
+    galleryImages: [
+      {
+        url: "/images/destinations/lonavala-khandala.jpg",
+        alt: "Lonavala Scenery",
+        title: "Sahyadri Mountain Pass",
+      },
+      {
+        url: "/images/destinations/mumbai.jpg",
+        alt: "Mumbai Highway",
+        title: "Mumbai Expressway Route",
+      },
+    ],
     keyAttractions: [
       "Tiger's Leap & Lion's Point Overlooks",
       "Karla Caves & Bhaja Rock-Cut Buddhist Caves",

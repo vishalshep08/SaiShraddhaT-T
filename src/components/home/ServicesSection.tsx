@@ -29,7 +29,7 @@ const CONCISE_SERVICES: ServiceCardData[] = [
   },
   {
     title: "Airport & Railway Transfers",
-    slug: "airport-railway-transfers",
+    slug: "airport-transfer",
     description:
       "Punctual pickups and drops for Shirdi Airport (SAG), Sainagar Station, Kopargaon & Manmad.",
     icon: Plane,
@@ -106,7 +106,7 @@ export function ServicesSection() {
 
               <div className="pt-3 border-t border-stone-100">
                 <Link
-                  href={`/services#${service.slug}`}
+                  href={`/services/${service.slug}`}
                   className="text-xs font-bold text-brand-maroon hover:text-brand-maroon-800 inline-flex items-center gap-1 hover:underline"
                 >
                   <span>Explore Service</span>

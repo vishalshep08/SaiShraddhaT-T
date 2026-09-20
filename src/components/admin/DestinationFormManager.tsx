@@ -24,6 +24,8 @@ export function DestinationFormManager({ initialData }: DestinationFormManagerPr
     shortDescription: initialData.shortDescription || "",
     fullDescription: initialData.fullDescription || "",
     highlights: initialData.highlights || [],
+    primaryImageUrl: initialData.primaryImageUrl || "",
+    imageAltText: initialData.imageAltText || "",
     isPopular: Boolean(initialData.isPopular),
     isFeatured: Boolean(initialData.isFeatured),
     status: initialData.status || "published",
@@ -211,7 +213,64 @@ export function DestinationFormManager({ initialData }: DestinationFormManagerPr
 
           <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs space-y-4">
             <h3 className="text-sm font-bold text-brand-charcoal-900 uppercase tracking-wider border-b border-stone-100 pb-2">
-              2. SEO Settings
+              2. Destination Visual Media
+            </h3>
+
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-brand-charcoal-900">
+                  Primary Landmark Image URL
+                </label>
+                <input
+                  type="text"
+                  value={formData.primaryImageUrl || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, primaryImageUrl: e.target.value }))
+                  }
+                  placeholder="/images/destinations/nashik.jpg"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm font-mono text-brand-charcoal-900 bg-white focus:outline-none focus:ring-2 focus:ring-brand-maroon/20 focus:border-brand-maroon"
+                />
+                <p className="text-[11px] text-stone-500">
+                  Use standard local paths like <code className="text-brand-maroon">/images/destinations/nashik.jpg</code> or external secure HTTPS URLs.
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-brand-charcoal-900">
+                  Image Alt Text (SEO & Accessibility)
+                </label>
+                <input
+                  type="text"
+                  value={formData.imageAltText || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, imageAltText: e.target.value }))
+                  }
+                  placeholder="e.g. Nashik Panchavati Ghats and Godavari River"
+                  className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm text-brand-charcoal-900 bg-white"
+                />
+              </div>
+
+              {/* Live Preview */}
+              {formData.primaryImageUrl && (
+                <div className="pt-2 space-y-1.5">
+                  <span className="text-[11px] font-bold text-stone-500 uppercase tracking-wider block">
+                    Live Thumbnail Preview
+                  </span>
+                  <div className="relative aspect-video max-w-sm rounded-xl overflow-hidden bg-stone-100 border border-stone-200">
+                    <img
+                      src={formData.primaryImageUrl}
+                      alt={formData.imageAltText || "Destination preview"}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs space-y-4">
+            <h3 className="text-sm font-bold text-brand-charcoal-900 uppercase tracking-wider border-b border-stone-100 pb-2">
+              3. SEO Settings
             </h3>
 
             <div className="space-y-3">
